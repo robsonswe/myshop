@@ -8,7 +8,7 @@ module.exports = {
     extend: {
       gridTemplateRows: {
         // Complex site-specific row configuration
-        'layout': 'min-content 1fr min-content',
+        'layout': 'min-content 100% min-content',
       }
     }
 ,

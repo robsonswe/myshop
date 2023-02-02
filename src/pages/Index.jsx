@@ -19,16 +19,18 @@ function Offers({ type }) {
       <h2 className="text-lg font-bold">{type}</h2>
       <ul className="flex flex-row flex-wrap items-center justify-start gap-5">
         {products.map((product) => (
-          <li className="flex flex-col items-start rounded border border-black p-2">
-            <div className="flex h-52 w-52 items-center justify-center border border-black text-center">
-              Placeholder Image
-            </div>
-            <h3 className="font-bold">{product}</h3>
-            <p>Price: $00.00</p>
-            <button className="flex w-full items-center justify-center gap-2 rounded border bg-slate-500 p-1 font-bold text-white">
-              <BsCart4 /> Buy
-            </button>
-          </li>
+          <a href={`./product/${product}`}>
+            <li className="flex flex-col items-start rounded border border-black p-2">
+              <div className="flex h-52 w-52 items-center justify-center border border-black text-center">
+                Placeholder Image
+              </div>
+              <h3 className="font-bold">{product}</h3>
+              <p>Price: $00.00</p>
+              <button className="flex w-full items-center justify-center gap-2 rounded border bg-slate-500 p-1 font-bold text-white">
+                <BsCart4 /> Buy
+              </button>
+            </li>
+          </a>
         ))}
       </ul>
     </div>

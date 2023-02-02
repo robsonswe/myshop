@@ -8,7 +8,9 @@ export default function Header() {
   return (
     <header>
       <div className="flex flex-row items-center justify-between bg-slate-300 py-3 px-4">
-        <h1 className="text-lg font-bold">LOGO</h1>
+        <a href="/">
+          <h1 className="text-lg font-bold">LOGO</h1>
+        </a>
         <form
           className="flex flex-row items-center gap-0"
           onSubmit={(e) => handleSubmit(e)}
