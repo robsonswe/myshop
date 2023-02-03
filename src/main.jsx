@@ -33,10 +33,12 @@ const router = createBrowserRouter([
   },
 ]);
 
+const basename = process.env.PUBLIC_URL || "/";
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <RouterProvider router={router}>
-      <Router basename="./">
+      <Router basename={basename}>
         <Outlet />
       </Router>
     </RouterProvider>
