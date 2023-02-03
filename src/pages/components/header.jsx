@@ -2,6 +2,8 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { BsBell, BsCart } from "react-icons/bs";
 import { useLocation } from "react-router-dom";
 
+import { Link } from "react-router-dom";
+
 export default function Header() {
   const location = useLocation();
 
@@ -11,9 +13,9 @@ export default function Header() {
   return (
     <header>
       <div className="flex flex-row items-center justify-between bg-slate-300 py-3 px-4">
-        <a href="/">
+        <Link to="/">
           <h1 className="text-lg font-bold">LOGO</h1>
-        </a>
+        </Link>
         <form
           className="flex flex-row items-center gap-0"
           onSubmit={(e) => handleSubmit(e)}
