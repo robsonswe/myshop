@@ -1,6 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Outlet,
+  Router,
+  RouterProvider,
+} from "react-router-dom";
 
 import ErrorPage from "./pages/ErrorPage";
 import Index from "./pages/Index";
@@ -12,9 +17,17 @@ const router = createBrowserRouter([
     path: "/",
     element: <Index />,
     errorElement: <ErrorPage />,
+    children: [
+      {
+        path: "index",
+      },
+      {
+        path: "index.html",
+      },
+    ],
   },
   {
-    path: "product/:productName",
+    path: "/product/:productName",
     element: <Product />,
     errorElement: <ErrorPage />,
   },
@@ -23,7 +36,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <RouterProvider router={router}>
-      <Outlet />
+      <Router basename="./">
+        <Outlet />
+      </Router>
     </RouterProvider>
   </React.StrictMode>
 );
