@@ -1,7 +1,10 @@
 import { AiOutlineSearch } from "react-icons/ai";
 import { BsBell, BsCart } from "react-icons/bs";
+import { useLocation } from "react-router-dom";
 
 export default function Header() {
+  const location = useLocation();
+
   function handleSubmit(e) {
     e.preventDefault();
   }
@@ -59,6 +62,7 @@ export default function Header() {
           </li>
         </ul>
       </nav>
+      <p>Current URL: {location.pathname}</p>
     </header>
   );
 }

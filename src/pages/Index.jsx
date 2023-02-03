@@ -19,7 +19,7 @@ function Offers({ type }) {
       <h2 className="text-lg font-bold">{type}</h2>
       <ul className="flex flex-row flex-wrap items-center justify-start gap-5">
         {products.map((product) => (
-          <a href={`./product/${product}`}>
+          <a href={`./product/${product}`} key={product}>
             <li className="flex flex-col items-start rounded border border-black p-2">
               <div className="flex h-52 w-52 items-center justify-center border border-black text-center">
                 Placeholder Image
@@ -53,7 +53,10 @@ function Categories() {
       <h2 className="text-lg font-bold">Categories</h2>
       <ul className="flex flex-row flex-wrap items-center justify-start gap-5">
         {categories.map((category) => (
-          <li className="flex flex-col items-center gap-2 rounded border border-black p-5">
+          <li
+            key={category}
+            className="flex flex-col items-center gap-2 rounded border border-black p-5"
+          >
             <h3 className="font-bold">{category}</h3>
             <div className="flex h-52 w-52 items-center justify-center border border-black text-center">
               Placeholder Image
