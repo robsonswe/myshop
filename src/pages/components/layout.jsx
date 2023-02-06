@@ -8,7 +8,7 @@ export default function Layout({ title = "Undefined", children }) {
       <Head title={title} />
       <div className="grid grid-rows-layout">
         <Header />
-        <main className="bg-gray-400 px-64">{children}</main>
+        <main className="min-h-screen bg-gray-400 px-64">{children}</main>
         <Footer />
       </div>
     </>

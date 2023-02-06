@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { createHashRouter, Outlet, RouterProvider } from "react-router-dom";
 
+import Category from "./pages/Category";
 import ErrorPage from "./pages/ErrorPage";
 import Index from "./pages/Index";
 import Product from "./pages/Product";
@@ -19,15 +20,16 @@ const routes = [
       {
         path: `/index.html`,
       },
-      {
-        path: `/*`,
-        errorElement: <ErrorPage />,
-      },
     ],
   },
   {
-    path: `/product/:productName`,
+    path: `/product/:productId`,
     element: <Product />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: `/category/:categoryId`,
+    element: <Category />,
     errorElement: <ErrorPage />,
   },
 ];

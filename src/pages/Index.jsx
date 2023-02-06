@@ -1,68 +1,102 @@
-import { Link } from "react-router-dom";
 import Layout from "./components/layout";
 
-import { BsCart4 } from "react-icons/bs";
+import { useEffect, useState } from "react";
 
-let products = [
-  "Product 1",
-  "Product 2",
-  "Product 3",
-  "Product 4",
-  "Product 5",
-  "Product 6",
-  "Product 7",
-  "Product 8",
-];
+import { BsCart4 } from "react-icons/bs";
+import Redirect from "./components/link";
+
+function catTitle(str) {
+  return str
+    .replace(/-/g, " ")
+    .replace(/\b[a-z]/g, (char) => char.toUpperCase());
+}
 
 function Offers({ type }) {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch("https://dummyjson.com/products?limit=10");
+      const data = await res.json();
+      setProducts(data.products);
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div className="flex flex-col gap-2 p-2">
       <h2 className="text-lg font-bold">{type}</h2>
       <ul className="flex flex-row flex-wrap items-center justify-start gap-5">
         {products.map((product) => (
-          <Link to={`/product/${product}`} key={product}>
+          <Redirect to={`/product/${product.id}`} key={product.id}>
             <li className="flex flex-col items-start rounded border border-black p-2">
-              <div className="flex h-52 w-52 items-center justify-center border border-black text-center">
-                Placeholder Image
-              </div>
-              <h3 className="font-bold">{product}</h3>
+              <img
+                src={product.thumbnail}
+                alt={product.title}
+                className="aspect-auto h-52 w-52"
+              />
+              <h3 className="font-bold">{product.title}</h3>
               <p>Price: $00.00</p>
-              <button className="flex w-full items-center justify-center gap-2 rounded border bg-slate-500 p-1 font-bold text-white">
+              <button className="flex w-full items-center justify-center gap-2 rounded border bg-slate-500 p-1 font-bold text-white hover:bg-slate-700">
                 <BsCart4 /> Buy
               </button>
             </li>
-          </Link>
+          </Redirect>
         ))}
       </ul>
     </div>
   );
 }
 
+function CategoryImage({ categoryName }) {
+  const [category, setCategory] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch(
+        `https://dummyjson.com/products/category/${categoryName}?limit=1`
+      );
+      const data = await res.json();
+      setCategory(data);
+    };
+
+    fetchData();
+  }, []);
+
+  return category.length > 0 ? (
+    <img src={category[0].image} alt={category[0].name} />
+  ) : (
+    <div>Loading...</div>
+  );
+}
+
 function Categories() {
-  let categories = [
-    "Category 1",
-    "Category 2",
-    "Category 3",
-    "Category 4",
-    "Category 5",
-    "Category 6",
-    "Category 7",
-    "Category 8",
-  ];
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch("https://dummyjson.com/products/categories");
+      const data = await res.json();
+      setCategories(data);
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div className="flex flex-col gap-2 p-2">
       <h2 className="text-lg font-bold">Categories</h2>
       <ul className="flex flex-row flex-wrap items-center justify-start gap-5">
         {categories.map((category) => (
-          <li
-            key={category}
-            className="flex flex-col items-center gap-2 rounded border border-black p-5"
-          >
-            <h3 className="font-bold">{category}</h3>
-            <div className="flex h-52 w-52 items-center justify-center border border-black text-center">
-              Placeholder Image
-            </div>
-          </li>
+          <Redirect to={`/category/${category}`} key={category}>
+            <li className="flex flex-col items-center gap-2 rounded border border-black p-5">
+              <h3 className="font-bold">{catTitle(category)}</h3>
+              <div className="flex h-52 w-52 items-center justify-center border border-black text-center">
+                <CategoryImage categoryName={category} />
+              </div>
+            </li>
+          </Redirect>
         ))}
       </ul>
     </div>
