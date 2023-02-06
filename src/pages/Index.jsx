@@ -3,6 +3,7 @@ import Layout from "./components/layout";
 import { useEffect, useState } from "react";
 
 import { BsCart4 } from "react-icons/bs";
+import PulseLoader from "react-spinners/PulseLoader";
 import { catTitle, Rating } from "./components/helpers";
 import Redirect from "./components/link";
 
@@ -64,7 +65,7 @@ function CategoryImage({ categoryName }) {
   return category.length > 0 ? (
     <img src={category[0].image} alt={category[0].name} />
   ) : (
-    <div>Loading...</div>
+    <PulseLoader size={10} aria-label="Loading Spinner" data-testid="loader" />
   );
 }
 
