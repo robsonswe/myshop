@@ -3,13 +3,8 @@ import Layout from "./components/layout";
 import { useEffect, useState } from "react";
 
 import { BsCart4 } from "react-icons/bs";
+import { catTitle, Rating } from "./components/helpers";
 import Redirect from "./components/link";
-
-function catTitle(str) {
-  return str
-    .replace(/-/g, " ")
-    .replace(/\b[a-z]/g, (char) => char.toUpperCase());
-}
 
 function Offers({ type }) {
   const [products, setProducts] = useState([]);
@@ -37,7 +32,9 @@ function Offers({ type }) {
                 className="aspect-auto h-52 w-52"
               />
               <h3 className="font-bold">{product.title}</h3>
-              <p>Price: $00.00</p>
+              <Rating stars={product.rating} />
+
+              <p>Price: ${product.price}</p>
               <button className="flex w-full items-center justify-center gap-2 rounded border bg-slate-500 p-1 font-bold text-white hover:bg-slate-700">
                 <BsCart4 /> Buy
               </button>
@@ -106,7 +103,7 @@ function Categories() {
 export default function Index() {
   return (
     <>
-      <Layout title={"Index"}>
+      <Layout title={"Home"}>
         <div className="flex flex-col gap-5 bg-slate-200 py-2">
           <div className="p-2">
             <div className="flex h-36 items-center justify-center border border-black text-center">

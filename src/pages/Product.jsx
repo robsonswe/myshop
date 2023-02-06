@@ -3,10 +3,10 @@ import { useEffect, useState } from "react";
 import { AiFillTag, AiOutlineShoppingCart } from "react-icons/ai";
 import { useParams } from "react-router-dom";
 
+import { Rating } from "./components/helpers";
 import Layout from "./components/layout";
-import Rating from "./components/rating";
 
-function Comments() {
+function Comments({ rating }) {
   const [comments, setComments] = useState([]);
 
   useEffect(() => {
@@ -31,7 +31,7 @@ function Comments() {
                 <h2 className="font-bold">lorem ipsum</h2>
                 (01/01/2020)
               </div>
-              <Rating stars={4} />
+              <Rating stars={rating} />
             </div>
             <h3 className="italic">{comment.user.username}</h3>
             <p>{comment.body}</p>
@@ -78,7 +78,7 @@ export default function Product() {
           <div>
             <div>
               <h2 className="text-xl font-bold">{product.title}</h2>
-              <Rating stars={4} />
+              <Rating stars={product.rating} />
             </div>
             <div>
               <h3 className="text-xl">${product.price}</h3>
@@ -95,7 +95,7 @@ export default function Product() {
           </div>
           <div></div>
         </section>
-        <Comments />
+        <Comments rating={product.rating} />
       </div>
     </Layout>
   );

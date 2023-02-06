@@ -6,6 +6,7 @@ import Category from "./pages/Category";
 import ErrorPage from "./pages/ErrorPage";
 import Index from "./pages/Index";
 import Product from "./pages/Product";
+import Search from "./pages/Search";
 import "./tailwind.css";
 
 const routes = [
@@ -30,6 +31,11 @@ const routes = [
   {
     path: `/category/:categoryId`,
     element: <Category />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: `/search/:productName`,
+    element: <Search />,
     errorElement: <ErrorPage />,
   },
 ];
