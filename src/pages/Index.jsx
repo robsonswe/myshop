@@ -1,8 +1,8 @@
-import React from "react";
-import { BsCart4, BsArrowRight, BsHeart } from "react-icons/bs";
+import React, { useState } from "react";
+import { BsCart4, BsArrowRight, BsHeart, BsHeartFill, BsStarFill, BsStarHalf, BsStar } from "react-icons/bs";
 import PulseLoader from "react-spinners/PulseLoader";
 import Layout from "../components/layout";
-import { Rating, catTitle } from "../components/helpers";
+import { catTitle } from "../components/helpers";
 import Redirect from "../components/link";
 import { useProducts, useCategoryImage, useCategories } from "../hooks/hooks";
 
@@ -12,30 +12,78 @@ const Card = ({ children, className = "" }) => (
   </div>
 );
 
-const OfferCard = ({ product }) => (
-  <Card>
-    <div className="aspect-square overflow-hidden bg-gray-50 relative">
-      <img
-        src={product.thumbnail || "/placeholder.svg"}
-        alt={product.title}
-        className="w-full h-full object-cover transition-transform group-hover:scale-110"
-      />
-      <button className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition">
-        <BsHeart className="w-5 h-5 text-gray-600" />
-      </button>
-    </div>
-    <div className="p-4">
-      <h3 className="font-medium text-lg line-clamp-2">{product.title}</h3>
-      <div className="flex justify-between items-center mt-2">
-        <Rating stars={product.rating} />
-        <span className="text-lg font-bold text-blue-600">${product.price}</span>
+const OfferCard = ({ product }) => {
+  const [isWishlist, setIsWishlist] = useState(false);
+  const originalPrice = product.discountPercentage > 0 
+    ? Math.round(product.price / (1 - product.discountPercentage / 100))
+    : null;
+
+  return (
+    <Card>
+      <div className="relative overflow-hidden bg-gray-50">
+        <img
+          src={product.thumbnail || "/placeholder.svg"}
+          alt={product.title}
+          className="w-full h-52 object-cover transition-transform group-hover:scale-105"
+        />
+        
+        {product.discountPercentage > 0 && (
+          <span className="absolute top-2 left-2 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">
+            -{Math.round(product.discountPercentage)}%
+          </span>
+        )}
+        
+        <button 
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsWishlist(!isWishlist);
+          }}
+          className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-sm hover:bg-gray-50 transition-colors"
+        >
+          {isWishlist ? (
+            <BsHeartFill className="text-red-500 animate-pulse" />
+          ) : (
+            <BsHeart className="text-gray-600" />
+          )}
+        </button>
       </div>
-      <button className="mt-3 w-full bg-blue-600 text-white py-2.5 rounded-lg flex items-center justify-center gap-2 hover:bg-blue-700 transition">
-        <BsCart4 className="text-lg" /> <span>Add to Cart</span>
-      </button>
-    </div>
-  </Card>
-);
+      
+      <div className="p-4">
+        <div className="flex justify-between items-start mb-2">
+          <h3 className="font-semibold text-lg truncate flex-1">{product.title}</h3>
+          {product.brand && (
+            <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded">{product.brand}</span>
+          )}
+        </div>
+
+        <div className="flex items-center gap-1 mb-2">
+          {[...Array(5)].map((_, i) => {
+            if (i < Math.floor(product.rating)) return <BsStarFill key={i} className="text-yellow-400" />;
+            if (i === Math.floor(product.rating) && product.rating % 1 >= 0.5) return <BsStarHalf key={i} className="text-yellow-400" />;
+            return <BsStar key={i} className="text-yellow-400" />;
+          })}
+          <span className="ml-1 text-sm text-gray-500">({product.rating})</span>
+        </div>
+
+        <div className="flex justify-between items-center mb-3">
+          <div className="flex items-baseline gap-2">
+            <span className="text-xl font-bold text-blue-600">${product.price}</span>
+            {originalPrice && (
+              <span className="text-sm text-gray-400 line-through">${originalPrice}</span>
+            )}
+          </div>
+          <span className={`text-sm ${product.stock < 10 ? 'text-red-600' : 'text-green-600'}`}>
+            {product.stock < 10 ? `${product.stock} left` : 'In Stock'}
+          </span>
+        </div>
+
+        <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-md transition-colors flex items-center justify-center gap-2">
+          <BsCart4 className="text-lg" /> Add to Cart
+        </button>
+      </div>
+    </Card>
+  );
+};
 
 const SectionHeader = ({ title, viewAll }) => (
   <div className="flex justify-between items-center mb-6">
@@ -51,13 +99,42 @@ const SectionHeader = ({ title, viewAll }) => (
 );
 
 const Offers = ({ type }) => {
-  const { products, error } = useProducts(8);
+  const getQueryParams = () => {
+    switch(type) {
+      case 'Best Sellers':
+        return { 
+          sortBy: 'rating', 
+          order: 'desc', 
+          limit: 8,
+          select: 'title,price,rating,thumbnail,brand,discountPercentage,stock' 
+        };
+      case 'New Arrivals':
+        return { 
+          sortBy: 'id', 
+          order: 'desc', 
+          limit: 8,
+          select: 'title,price,rating,thumbnail,brand,discountPercentage,stock'
+        };
+      case 'Featured Products':
+        return { 
+          limit: 8, 
+          skip: 8,
+          select: 'title,price,rating,thumbnail,brand,discountPercentage,stock'
+        };
+      default:
+        return { limit: 8 };
+    }
+  };
+
+  const { products, error } = useProducts(getQueryParams());
 
   return (
     <section className="py-12">
       <SectionHeader title={type} viewAll="/products" />
       {error ? (
-        <div className="text-center p-8 text-gray-600 bg-gray-50 rounded-xl">Error loading products.</div>
+        <div className="text-center p-8 text-gray-600 bg-gray-50 rounded-xl">
+          Error loading products.
+        </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {products.map((product) => (
@@ -93,11 +170,16 @@ const CategoryCard = ({ category }) => {
 
 const Categories = () => {
   const categories = useCategories();
+
+  const randomCategories = [...categories]
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 4);
+
   return (
     <section className="py-12">
       <SectionHeader title="Shop by Category" viewAll="/categories" />
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-        {categories.slice(0, 4).map((category) => (
+        {randomCategories.map((category) => (
           <Redirect to={`/category/${category}`} key={category}>
             <CategoryCard category={category} />
           </Redirect>
