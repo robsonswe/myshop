@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react"
 import { BsCart4 } from "react-icons/bs"
 import PulseLoader from "react-spinners/PulseLoader"
 import Layout from "../components/layout"

@@ -1,5 +1,3 @@
-"use client"
-
 import { useRouteError } from "react-router-dom"
 import Layout from "../components/layout"
 

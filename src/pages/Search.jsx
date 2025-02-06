@@ -1,5 +1,3 @@
-"use client"
-
 import { useEffect, useState } from "react"
 import { BsCart4 } from "react-icons/bs"
 import { useParams } from "react-router-dom"
