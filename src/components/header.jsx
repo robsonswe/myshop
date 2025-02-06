@@ -1,15 +1,16 @@
-"use client"
-
 import { useState, useRef, useEffect } from "react"
 import { Form, Link, useNavigate } from "react-router-dom"
 import { AiOutlineSearch, AiOutlineUser } from "react-icons/ai"
 import { BsBell, BsCart, BsChevronDown } from "react-icons/bs"
+import { useCategories } from "../hooks/hooks"
+import { catTitle } from "../components/helpers"
 
 export default function Header() {
   const [searchTerm, setSearchTerm] = useState("")
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false)
   const navigate = useNavigate()
   const megaMenuRef = useRef(null)
+  const categories = useCategories()
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -91,17 +92,15 @@ export default function Header() {
                 <div className="absolute left-0 mt-2 w-64 md:w-96 bg-gray-800 shadow-lg rounded-lg overflow-hidden z-50">
                   <div className="p-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {["Electronics", "Fashion", "Home & Garden", "Sports", "Beauty", "Toys", "Automotive", "Books"].map(
-                        (category) => (
-                          <Link
-                            key={category}
-                            to={`/category/${category.toLowerCase()}`}
-                            className="px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-blue-400 rounded-lg transition duration-300"
-                          >
-                            {category}
-                          </Link>
-                        )
-                      )}
+                      {categories.map((category) => (
+                        <Link
+                          key={category}
+                          to={`/category/${category}`}
+                          className="px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-blue-400 rounded-lg transition duration-300"
+                        >
+                          {catTitle(category)}
+                        </Link>
+                      ))}
                     </div>
                   </div>
                 </div>

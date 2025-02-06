@@ -4,6 +4,7 @@ import PulseLoader from "react-spinners/PulseLoader"
 import Layout from "../components/layout"
 import { catTitle, Rating } from "../components/helpers"
 import Redirect from "../components/link"
+import { useProducts, useCategoryImage, useCategories } from "../hooks/hooks"
 
 function OfferCard({ product }) {
   return (
@@ -22,23 +23,7 @@ function OfferCard({ product }) {
 }
 
 function Offers({ type }) {
-  const [products, setProducts] = useState([])
-  const [error, setError] = useState(null)
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetch("https://dummyjson.com/products?limit=10")
-        const data = await res.json()
-        setProducts(data.products)
-      } catch (error) {
-        console.error("Error fetching products:", error)
-        setError(error)
-      }
-    }
-
-    fetchData()
-  }, [])
+  const { products, error } = useProducts(10)
 
   if (error) {
     return <div>Error loading products. Please try again later.</div>
@@ -59,26 +44,7 @@ function Offers({ type }) {
 }
 
 function CategoryImage({ categoryName }) {
-  const [image, setImage] = useState(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetch(`https://dummyjson.com/products/category/${categoryName}?limit=1`)
-        const data = await res.json()
-        if (data.products && data.products.length > 0) {
-          setImage(data.products[0].thumbnail)
-        }
-      } catch (error) {
-        console.error("Error fetching category image:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchData()
-  }, [categoryName])
+  const { image, loading } = useCategoryImage(categoryName)
 
   return loading ? (
     <PulseLoader size={10} aria-label="Loading Spinner" data-testid="loader" />
@@ -88,16 +54,7 @@ function CategoryImage({ categoryName }) {
 }
 
 function Categories() {
-  const [categories, setCategories] = useState([])
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch("https://dummyjson.com/products/categories")
-      const data = await res.json()
-      setCategories(data.map((cat) => cat.slug));    }
-
-    fetchData()
-  }, [])
+  const categories = useCategories()
 
   return (
     <section className="my-8">
@@ -138,4 +95,3 @@ export default function Index() {
     </Layout>
   )
 }
-
