@@ -36,7 +36,7 @@ function Products({ item }) {
         {products.map((product) => (
           <Redirect to={`/product/${product.id}`} key={product.id}>
             <li
-              className="flex flex-col items-start rounded border border-black p-2"
+              className="flex flex-col items-start rounded-sm border border-black p-2"
               key={product.id}
             >
               <img
@@ -47,7 +47,7 @@ function Products({ item }) {
               <h3 className="font-bold">{product.title}</h3>
               <Rating stars={product.rating} />
               <p>Price: ${product.price}</p>
-              <button className="flex w-full items-center justify-center gap-2 rounded border bg-slate-500 p-1 font-bold text-white hover:bg-slate-700">
+              <button className="flex w-full items-center justify-center gap-2 rounded-sm border bg-slate-500 p-1 font-bold text-white hover:bg-slate-700">
                 <BsCart4 /> Buy
               </button>
             </li>
@@ -64,7 +64,7 @@ export default function Search() {
   return (
     <Layout title={catTitle(productName)}>
       <div className="mt-2 flex flex-row gap-4">
-        <div className="rounded-sm bg-white p-3">
+        <div className="rounded-xs bg-white p-3">
           <div>
             <h3 className="font-bold">Ratings</h3>
             <Rating stars={5} />

@@ -84,10 +84,10 @@ export default function Product() {
               <h3 className="text-xl">${product.price}</h3>
               <p>{product.description}</p>
               <div className="flex flex-row gap-2">
-                <button className="flex w-36 flex-row items-center justify-center gap-2 rounded-sm border border-black bg-red-500 p-2 text-sm font-bold text-white">
+                <button className="flex w-36 flex-row items-center justify-center gap-2 rounded-xs border border-black bg-red-500 p-2 text-sm font-bold text-white">
                   <AiOutlineShoppingCart /> ADD TO CART
                 </button>
-                <button className="flex w-36 flex-row items-center justify-center gap-2 rounded-sm border border-black bg-red-500 p-2 text-sm font-bold text-white">
+                <button className="flex w-36 flex-row items-center justify-center gap-2 rounded-xs border border-black bg-red-500 p-2 text-sm font-bold text-white">
                   <AiFillTag /> BUY
                 </button>
               </div>

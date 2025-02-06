@@ -32,7 +32,7 @@ export default function Header() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             id="search"
-            className="h-7 w-80 rounded-l-md border border-black bg-slate-100 py-4 indent-2 outline-none"
+            className="h-7 w-80 rounded-l-md border border-black bg-slate-100 py-4 indent-2 outline-hidden"
           />
           <button className="flex h-7 items-center rounded-r-md border-y border-r border-black bg-slate-100 px-2 py-4">
             <AiOutlineSearch className="cursor-pointer" size={17} />

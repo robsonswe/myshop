@@ -26,7 +26,7 @@ function Offers({ type }) {
       <ul className="flex flex-row flex-wrap items-center justify-start gap-5">
         {products.map((product) => (
           <Redirect to={`/product/${product.id}`} key={product.id}>
-            <li className="flex flex-col items-start rounded border border-black p-2">
+            <li className="flex flex-col items-start rounded-sm border border-black p-2">
               <img
                 src={product.thumbnail}
                 alt={product.title}
@@ -36,7 +36,7 @@ function Offers({ type }) {
               <Rating stars={product.rating} />
 
               <p>Price: ${product.price}</p>
-              <button className="flex w-full items-center justify-center gap-2 rounded border bg-slate-500 p-1 font-bold text-white hover:bg-slate-700">
+              <button className="flex w-full items-center justify-center gap-2 rounded-sm border bg-slate-500 p-1 font-bold text-white hover:bg-slate-700">
                 <BsCart4 /> Buy
               </button>
             </li>
@@ -88,7 +88,7 @@ function Categories() {
       <ul className="flex flex-row flex-wrap items-center justify-start gap-5">
         {categories.map((category) => (
           <Redirect to={`/category/${category}`} key={category}>
-            <li className="flex flex-col items-center gap-2 rounded border border-black p-5">
+            <li className="flex flex-col items-center gap-2 rounded-sm border border-black p-5">
               <h3 className="font-bold">{catTitle(category)}</h3>
               <div className="flex h-52 w-52 items-center justify-center border border-black text-center">
                 <CategoryImage categoryName={category} />

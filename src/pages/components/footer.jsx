@@ -35,7 +35,7 @@ export default function Footer() {
             placeholder="Email"
             className="py-2 indent-2"
           />
-          <button className="rounded border border-black bg-slate-300 px-2">
+          <button className="rounded-sm border border-black bg-slate-300 px-2">
             Register
           </button>
         </form>
