@@ -7,6 +7,7 @@ import ErrorPage from "./pages/ErrorPage";
 import Index from "./pages/Index";
 import Product from "./pages/Product";
 import Search from "./pages/Search";
+import CategoriesPage from "./pages/Categories";
 import "./tailwind.css";
 
 const routes = [
@@ -22,6 +23,11 @@ const routes = [
         path: `/index.html`,
       },
     ],
+  },
+  {
+    path: `/categories/`,
+    element: <CategoriesPage />,
+    errorElement: <ErrorPage />,
   },
   {
     path: `/product/:productId`,

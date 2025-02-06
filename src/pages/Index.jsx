@@ -1,37 +1,73 @@
-import { BsCart4 } from "react-icons/bs"
-import PulseLoader from "react-spinners/PulseLoader"
-import Layout from "../components/layout"
-import { catTitle, Rating } from "../components/helpers"
-import Redirect from "../components/link"
-import { useProducts, useCategoryImage, useCategories } from "../hooks/hooks"
+import React from 'react';
+import { BsCart4, BsArrowRight, BsHeart, BsStarFill } from "react-icons/bs";
+import PulseLoader from "react-spinners/PulseLoader";
+import Layout from "../components/layout";
+import { catTitle, Rating } from "../components/helpers";
+import Redirect from "../components/link";
+import { useProducts, useCategoryImage, useCategories } from "../hooks/hooks";
 
 function OfferCard({ product }) {
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105">
-      <img src={product.thumbnail || "/placeholder.svg"} alt={product.title} className="w-full h-48 object-cover" />
+    <div className="group relative bg-white rounded-xl shadow-sm overflow-hidden transition-all hover:shadow-lg">
+      <div className="aspect-square overflow-hidden bg-gray-50">
+        <img 
+          src={product.thumbnail || "/placeholder.svg"} 
+          alt={product.title} 
+          className="w-full h-full object-cover transition-transform group-hover:scale-110"
+        />
+        <button className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-colors">
+          <BsHeart className="w-5 h-5 text-gray-600" />
+        </button>
+      </div>
       <div className="p-4">
-        <h3 className="font-semibold text-lg mb-2 truncate">{product.title}</h3>
-        <Rating stars={product.rating} />
-        <p className="text-gray-600 mt-2">${product.price}</p>
-        <button className="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center">
-          <BsCart4 className="mr-2" /> Add to Cart
+        <div className="flex justify-between items-start gap-4 mb-2">
+          <h3 className="font-medium text-lg leading-tight line-clamp-2">{product.title}</h3>
+          <span className="text-lg font-bold text-blue-600 whitespace-nowrap">${product.price}</span>
+        </div>
+        <div className="flex items-center gap-2 mb-3">
+          <Rating stars={product.rating} />
+          <span className="text-sm text-gray-500">({product.rating})</span>
+        </div>
+        <button className="mt-2 w-full bg-blue-600 text-white py-2.5 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 group">
+          <BsCart4 className="text-lg" /> 
+          <span>Add to Cart</span>
         </button>
       </div>
     </div>
   )
 }
 
+function SectionHeader({ title, viewAll, className = "" }) {
+  return (
+    <div className={`flex justify-between items-center mb-6 ${className}`}>
+      <h2 className="text-2xl font-bold">{title}</h2>
+      {viewAll && (
+        <Redirect to={viewAll}>
+          <button className="text-blue-600 hover:text-blue-700 flex items-center gap-2 transition-colors group">
+            View All 
+            <BsArrowRight className="group-hover:translate-x-1 transition-transform" />
+          </button>
+        </Redirect>
+      )}
+    </div>
+  );
+}
+
 function Offers({ type }) {
-  const { products, error } = useProducts(10)
+  const { products, error } = useProducts(8);
 
   if (error) {
-    return <div>Error loading products. Please try again later.</div>
+    return (
+      <div className="text-center p-8 text-gray-600 bg-gray-50 rounded-xl">
+        Error loading products. Please try again later.
+      </div>
+    );
   }
 
   return (
-    <section className="my-8">
-      <h2 className="text-2xl font-bold mb-4">{type}</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <section className="py-12">
+      <SectionHeader title={type} viewAll="/products" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {products.map((product) => (
           <Redirect to={`/product/${product.id}`} key={product.id}>
             <OfferCard product={product} />
@@ -39,58 +75,96 @@ function Offers({ type }) {
         ))}
       </div>
     </section>
-  )
+  );
 }
 
-function CategoryImage({ categoryName }) {
-  const { image, loading } = useCategoryImage(categoryName)
-
-  return loading ? (
-    <PulseLoader size={10} aria-label="Loading Spinner" data-testid="loader" />
-  ) : (
-    <img src={image || "/placeholder.svg"} alt={categoryName} className="w-full h-full object-cover" />
-  )
+function CategoryCard({ category, size = "normal" }) {
+  const { image, loading } = useCategoryImage(category);
+  
+  return (
+    <div className={`group relative overflow-hidden rounded-xl ${size === "large" ? "aspect-[4/3]" : "aspect-square"}`}>
+      {loading ? (
+        <div className="flex items-center justify-center h-full bg-gray-100">
+          <PulseLoader size={10} aria-label="Loading Spinner" data-testid="loader" />
+        </div>
+      ) : (
+        <>
+          <img 
+            src={image || "/placeholder.svg"} 
+            alt={category}
+            className="w-full h-full object-cover transition-transform group-hover:scale-110"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex items-end p-6 group-hover:from-black/80 transition-colors">
+            <div>
+              <h3 className="text-white text-xl font-bold mb-2">{catTitle(category)}</h3>
+              <span className="inline-flex items-center text-white/80 text-sm">
+                Shop Now
+                <BsArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+              </span>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
 }
 
 function Categories() {
-  const categories = useCategories()
+  const categories = useCategories();
 
   return (
-    <section className="my-8">
-      <h2 className="text-2xl font-bold mb-4">Categories</h2>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-        {categories.map((category) => (
+    <section className="py-12">
+      <SectionHeader title="Shop by Category" viewAll="/categories" />
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        {categories.slice(0, 4).map((category) => (
           <Redirect to={`/category/${category}`} key={category}>
-            <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105">
-              <div className="h-48 overflow-hidden">
-                <CategoryImage categoryName={category} />
-              </div>
-              <div className="p-4">
-                <h3 className="font-semibold text-lg text-center">{catTitle(category)}</h3>
-              </div>
-            </div>
+            <CategoryCard category={category} />
           </Redirect>
         ))}
       </div>
     </section>
-  )
+  );
+}
+
+function HeroSection() {
+  return (
+    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 to-blue-800">
+      <div className="absolute inset-0 bg-black/10" />
+      <div className="relative px-8 py-16 md:py-24 max-w-2xl">
+        <span className="inline-block px-4 py-2 rounded-full bg-white/20 text-white mb-4 text-sm font-medium">
+          Limited Time Offer
+        </span>
+        <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
+          Summer Sale Is Live
+        </h1>
+        <p className="text-xl text-white/90 mb-8 max-w-lg">
+          Discover amazing deals with up to 50% off on selected items. 
+          Don't miss out on these incredible savings!
+        </p>
+        <Redirect to="/sale">
+          <button className="bg-white text-blue-600 px-8 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors inline-flex items-center gap-2 group">
+            Shop Now
+            <BsArrowRight className="group-hover:translate-x-1 transition-transform" />
+          </button>
+        </Redirect>
+      </div>
+      <div className="absolute bottom-0 right-0 w-64 h-64 bg-blue-500/20 rounded-full -mb-32 -mr-32 blur-3xl" />
+    </div>
+  );
 }
 
 export default function Index() {
   return (
     <Layout title="Home">
-      <div className="bg-gray-100 min-h-screen">
+      <div className="bg-gray-50 min-h-screen">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="bg-blue-600 text-white rounded-lg p-8 mb-8">
-            <h1 className="text-4xl font-bold mb-4">Summer Sale</h1>
-            <p className="text-xl">Up to 50% off on selected items. Shop now!</p>
-          </div>
-          <Offers type="Featured Products" />
+          <HeroSection />
           <Categories />
+          <Offers type="Featured Products" />
           <Offers type="Best Sellers" />
           <Offers type="New Arrivals" />
         </div>
       </div>
     </Layout>
-  )
+  );
 }
