@@ -48,24 +48,33 @@ function Offers({ type }) {
 }
 
 function CategoryImage({ categoryName }) {
-  const [category, setCategory] = useState([]);
+  const [image, setImage] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch(
-        `https://dummyjson.com/products/category/${categoryName}?limit=1`
-      );
-      const data = await res.json();
-      setCategory(data);
+      try {
+        const res = await fetch(
+          `https://dummyjson.com/products/category/${categoryName}?limit=1`
+        );
+        const data = await res.json();
+        if (data.products && data.products.length > 0) {
+          setImage(data.products[0].thumbnail);
+        }
+      } catch (error) {
+        console.error("Error fetching category image:", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchData();
-  }, []);
+  }, [categoryName]);
 
-  return category.length > 0 ? (
-    <img src={category[0].image} alt={category[0].name} />
-  ) : (
+  return loading ? (
     <PulseLoader size={10} aria-label="Loading Spinner" data-testid="loader" />
+  ) : (
+    <img src={image} alt={categoryName} className="h-full w-full object-cover" />
   );
 }
 
@@ -76,12 +85,12 @@ function Categories() {
     const fetchData = async () => {
       const res = await fetch("https://dummyjson.com/products/categories");
       const data = await res.json();
-      setCategories(data);
+      setCategories(data.map((cat) => cat.slug));
     };
-
+  
     fetchData();
   }, []);
-
+  
   return (
     <div className="flex flex-col gap-2 p-2">
       <h2 className="text-lg font-bold">Categories</h2>
