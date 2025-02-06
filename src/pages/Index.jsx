@@ -1,131 +1,141 @@
-import Layout from "./components/layout";
+import { useEffect, useState } from "react"
+import { BsCart4 } from "react-icons/bs"
+import PulseLoader from "react-spinners/PulseLoader"
+import Layout from "../components/layout"
+import { catTitle, Rating } from "../components/helpers"
+import Redirect from "../components/link"
 
-import { useEffect, useState } from "react";
-
-import { BsCart4 } from "react-icons/bs";
-import PulseLoader from "react-spinners/PulseLoader";
-import { catTitle, Rating } from "./components/helpers";
-import Redirect from "./components/link";
-
-function Offers({ type }) {
-  const [products, setProducts] = useState([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch("https://dummyjson.com/products?limit=10");
-      const data = await res.json();
-      setProducts(data.products);
-    };
-
-    fetchData();
-  }, []);
-
+function OfferCard({ product }) {
   return (
-    <div className="flex flex-col gap-2 p-2">
-      <h2 className="text-lg font-bold">{type}</h2>
-      <ul className="flex flex-row flex-wrap items-center justify-start gap-5">
-        {products.map((product) => (
-          <Redirect to={`/product/${product.id}`} key={product.id}>
-            <li className="flex flex-col items-start rounded-sm border border-black p-2">
-              <img
-                src={product.thumbnail}
-                alt={product.title}
-                className="aspect-auto h-52 w-52"
-              />
-              <h3 className="font-bold">{product.title}</h3>
-              <Rating stars={product.rating} />
-
-              <p>Price: ${product.price}</p>
-              <button className="flex w-full items-center justify-center gap-2 rounded-sm border bg-slate-500 p-1 font-bold text-white hover:bg-slate-700">
-                <BsCart4 /> Buy
-              </button>
-            </li>
-          </Redirect>
-        ))}
-      </ul>
+    <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105">
+      <img src={product.thumbnail || "/placeholder.svg"} alt={product.title} className="w-full h-48 object-cover" />
+      <div className="p-4">
+        <h3 className="font-semibold text-lg mb-2 truncate">{product.title}</h3>
+        <Rating stars={product.rating} />
+        <p className="text-gray-600 mt-2">${product.price}</p>
+        <button className="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center">
+          <BsCart4 className="mr-2" /> Add to Cart
+        </button>
+      </div>
     </div>
-  );
+  )
 }
 
-function CategoryImage({ categoryName }) {
-  const [image, setImage] = useState(null);
-  const [loading, setLoading] = useState(true);
+function Offers({ type }) {
+  const [products, setProducts] = useState([])
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(
-          `https://dummyjson.com/products/category/${categoryName}?limit=1`
-        );
-        const data = await res.json();
+        const res = await fetch("https://dummyjson.com/products?limit=10")
+        const data = await res.json()
+        setProducts(data.products)
+      } catch (error) {
+        console.error("Error fetching products:", error)
+        setError(error)
+      }
+    }
+
+    fetchData()
+  }, [])
+
+  if (error) {
+    return <div>Error loading products. Please try again later.</div>
+  }
+
+  return (
+    <section className="my-8">
+      <h2 className="text-2xl font-bold mb-4">{type}</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {products.map((product) => (
+          <Redirect to={`/product/${product.id}`} key={product.id}>
+            <OfferCard product={product} />
+          </Redirect>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+function CategoryImage({ categoryName }) {
+  const [image, setImage] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`https://dummyjson.com/products/category/${categoryName}?limit=1`)
+        const data = await res.json()
         if (data.products && data.products.length > 0) {
-          setImage(data.products[0].thumbnail);
+          setImage(data.products[0].thumbnail)
         }
       } catch (error) {
-        console.error("Error fetching category image:", error);
+        console.error("Error fetching category image:", error)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    fetchData();
-  }, [categoryName]);
+    fetchData()
+  }, [categoryName])
 
   return loading ? (
     <PulseLoader size={10} aria-label="Loading Spinner" data-testid="loader" />
   ) : (
-    <img src={image} alt={categoryName} className="h-full w-full object-cover" />
-  );
+    <img src={image || "/placeholder.svg"} alt={categoryName} className="w-full h-full object-cover" />
+  )
 }
 
 function Categories() {
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState([])
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch("https://dummyjson.com/products/categories");
-      const data = await res.json();
-      setCategories(data.map((cat) => cat.slug));
-    };
-  
-    fetchData();
-  }, []);
-  
+      const res = await fetch("https://dummyjson.com/products/categories")
+      const data = await res.json()
+      setCategories(data.map((cat) => cat.slug));    }
+
+    fetchData()
+  }, [])
+
   return (
-    <div className="flex flex-col gap-2 p-2">
-      <h2 className="text-lg font-bold">Categories</h2>
-      <ul className="flex flex-row flex-wrap items-center justify-start gap-5">
+    <section className="my-8">
+      <h2 className="text-2xl font-bold mb-4">Categories</h2>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
         {categories.map((category) => (
           <Redirect to={`/category/${category}`} key={category}>
-            <li className="flex flex-col items-center gap-2 rounded-sm border border-black p-5">
-              <h3 className="font-bold">{catTitle(category)}</h3>
-              <div className="flex h-52 w-52 items-center justify-center border border-black text-center">
+            <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105">
+              <div className="h-48 overflow-hidden">
                 <CategoryImage categoryName={category} />
               </div>
-            </li>
+              <div className="p-4">
+                <h3 className="font-semibold text-lg text-center">{catTitle(category)}</h3>
+              </div>
+            </div>
           </Redirect>
         ))}
-      </ul>
-    </div>
-  );
+      </div>
+    </section>
+  )
 }
 
 export default function Index() {
   return (
-    <>
-      <Layout title={"Home"}>
-        <div className="flex flex-col gap-5 bg-slate-200 py-2">
-          <div className="p-2">
-            <div className="flex h-36 items-center justify-center border border-black text-center">
-              Offers Banner
-            </div>
+    <Layout title="Home">
+      <div className="bg-gray-100 min-h-screen">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="bg-blue-600 text-white rounded-lg p-8 mb-8">
+            <h1 className="text-4xl font-bold mb-4">Summer Sale</h1>
+            <p className="text-xl">Up to 50% off on selected items. Shop now!</p>
           </div>
-          <Offers type={"Promos"} />
+          <Offers type="Featured Products" />
           <Categories />
-          <Offers type={"Best Selling"} />
-          <Offers type={"New Offers"} />
+          <Offers type="Best Sellers" />
+          <Offers type="New Arrivals" />
         </div>
-      </Layout>
-    </>
-  );
+      </div>
+    </Layout>
+  )
 }
+
