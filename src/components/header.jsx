@@ -1,21 +1,22 @@
 import { useState, useRef, useEffect } from "react"
-import { Form, Link, useNavigate } from "react-router-dom"
-import { AiOutlineSearch, AiOutlineUser } from "react-icons/ai"
-import { BsBell, BsCart, BsChevronDown } from "react-icons/bs"
+import { Search, Bell, ShoppingCart, User, ChevronDown, Menu, X, ChevronRight } from "lucide-react"
+import Redirect from "./link"
 import { useCategories } from "../hooks/hooks"
-import { catTitle } from "../components/helpers"
+import logo from "../assets/logo.svg"
+
+const catTitle = (cat) => cat.charAt(0).toUpperCase() + cat.slice(1).replace("-", " ")
 
 export default function Header() {
   const [searchTerm, setSearchTerm] = useState("")
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false)
-  const navigate = useNavigate()
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const megaMenuRef = useRef(null)
   const categories = useCategories()
 
   const handleSubmit = (event) => {
     event.preventDefault()
     if (searchTerm) {
-      navigate(`/search/${searchTerm}`)
+      console.log("Searching for:", searchTerm)
     }
   }
 
@@ -36,87 +37,207 @@ export default function Header() {
     }
   }, [])
 
+  // Close mobile menu when switching to desktop view
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsMobileMenuOpen(false)
+      }
+    }
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
+
   return (
-    <header className="bg-gray-800 text-white">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
-          <Link to="/" className="text-3xl font-extrabold tracking-tight text-blue-400">
-            LOGO
-          </Link>
-          <Form onSubmit={handleSubmit} method="get" action="/search" className="w-full md:w-auto relative">
-            <input
-              type="search"
-              name="searchTerm"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full md:w-96 h-12 rounded-full border-2 border-gray-600 bg-gray-700 py-2 px-6 text-white placeholder-gray-400 outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Search for products..."
-            />
-            <button
-              type="submit"
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-400 transition duration-300"
-            >
-              <AiOutlineSearch className="w-6 h-6" />
-            </button>
-          </Form>
-          <div className="flex items-center space-x-6">
-            <button className="hover:text-blue-400 transition duration-300">
-              <BsBell className="w-6 h-6" />
-            </button>
-            <button className="hover:text-blue-400 transition duration-300 relative">
-              <BsCart className="w-6 h-6" />
-              <span className="absolute -top-2 -right-2 bg-blue-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                3
+    <header className="bg-white shadow-lg border-b-2 border-gray-100 sticky top-0 z-50">
+      {/* Top promotional bar */}
+      <div className="bg-slate-800 text-white py-2">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-center text-sm font-medium">
+            <div className="hidden md:flex items-center space-x-8">
+              <span className="flex items-center">
+                <span className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
+                Free shipping on orders over $50
               </span>
-            </button>
-            <button className="hover:text-blue-400 transition duration-300">
-              <AiOutlineUser className="w-6 h-6" />
-            </button>
+              <span>24/7 Customer Support</span>
+              <span>30-Day Returns</span>
+            </div>
+            <div className="flex items-center space-x-6 ml-auto">
+              <a href="#" className="hover:text-yellow-300 transition-colors">
+                Track Order
+              </a>
+              <span>•</span>
+              <a href="#" className="hover:text-yellow-300 transition-colors">
+                Help Center
+              </a>
+            </div>
           </div>
         </div>
       </div>
-      <nav className="bg-gray-700">
+
+      {/* Main header */}
+      <div className="container mx-auto px-4 py-6">
+        <div className="flex items-center justify-between">
+          {/* --- UPDATED: Logo with Text --- */}
+          <div className="flex items-center">
+            <Redirect to="/" className="group flex items-center space-x-3">
+              <img src={logo} alt="MyShop Logo" className="h-10 w-auto" />
+              <span className="text-2xl font-bold text-slate-900">MyShop</span>
+            </Redirect>
+          </div>
+
+          {/* Search bar - Desktop */}
+          <div className="hidden md:flex flex-1 max-w-2xl mx-8">
+            <form onSubmit={handleSubmit} className="w-full relative group">
+              <div className="relative">
+                <input
+                  type="search"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full h-14 pl-6 pr-16 rounded-2xl border-2 border-gray-200 bg-gray-50 text-gray-800 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-blue-100 transition-all duration-200 text-lg"
+                  placeholder="Search for products, brands and more..."
+                />
+                <button
+                  type="submit"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-blue-600 hover:bg-blue-700 text-white rounded-xl flex items-center justify-center transition-all duration-200 transform hover:scale-105 shadow-lg"
+                >
+                  <Search className="w-5 h-5" />
+                </button>
+              </div>
+            </form>
+          </div>
+
+          {/* Action buttons */}
+          <div className="flex items-center space-x-2">
+            {/* Mobile search button */}
+            <button className="md:hidden p-3 rounded-xl hover:bg-gray-100 transition-colors">
+              <Search className="w-6 h-6 text-gray-600" />
+            </button>
+
+            {/* Notifications */}
+            <button className="relative p-3 rounded-xl hover:bg-gray-100 transition-colors hidden sm:block">
+              <Bell className="w-6 h-6 text-gray-600" />
+              <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold animate-pulse">
+                2
+              </span>
+            </button>
+
+            {/* Cart */}
+            <button className="relative p-3 rounded-xl hover:bg-gray-100 transition-colors group">
+              <ShoppingCart className="w-6 h-6 text-gray-600 group-hover:text-blue-600 transition-colors" />
+              <span className="absolute -top-1 -right-1 w-5 h-5 bg-blue-600 text-white text-xs rounded-full flex items-center justify-center font-bold">
+                3
+              </span>
+            </button>
+
+            {/* User account */}
+            <button className="p-3 rounded-xl hover:bg-gray-100 transition-colors hidden sm:block">
+              <User className="w-6 h-6 text-gray-600" />
+            </button>
+
+            {/* Mobile menu button */}
+            <button
+              className="md:hidden p-3 rounded-xl hover:bg-gray-100 transition-colors"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? <X className="w-6 h-6 text-gray-600" /> : <Menu className="w-6 h-6 text-gray-600" />}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile search bar */}
+        <div className="md:hidden mt-6">
+          <form onSubmit={handleSubmit} className="relative">
+            <input
+              type="search"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full h-12 pl-4 pr-12 rounded-xl border-2 border-gray-200 bg-gray-50 text-gray-800 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-blue-100 transition-all duration-200"
+              placeholder="Search products..."
+            />
+            <button
+              type="submit"
+              className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-blue-600 text-white rounded-lg flex items-center justify-center"
+            >
+              <Search className="w-4 h-4" />
+            </button>
+          </form>
+        </div>
+      </div>
+
+      {/* Navigation */}
+      <nav className="bg-gray-50 border-t border-gray-200 relative">
         <div className="container mx-auto px-4">
-          <ul className="flex items-center justify-center md:justify-start space-x-1 md:space-x-8 py-3">
-            <li className="relative group" ref={megaMenuRef}>
+          {/* Desktop navigation */}
+          <div className="hidden md:flex items-center justify-center space-x-12 py-4">
+            <div className="relative" ref={megaMenuRef}>
               <button
                 onClick={toggleMegaMenu}
-                className="flex items-center space-x-1 text-white hover:text-blue-400 transition duration-300"
+                className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 font-semibold transition-colors group"
               >
-                <span>Categories</span>
-                <BsChevronDown
-                  className={`w-4 h-4 transform transition-transform duration-300 ${isMegaMenuOpen ? "rotate-180" : ""}`}
+                <span>All Categories</span>
+                <ChevronDown
+                  className={`w-4 h-4 transform transition-transform duration-200 ${
+                    isMegaMenuOpen ? "rotate-180" : ""
+                  } group-hover:text-blue-600`}
                 />
               </button>
               {isMegaMenuOpen && (
-                <div className="absolute left-0 mt-2 w-64 md:w-96 bg-gray-800 shadow-lg rounded-lg overflow-hidden z-50">
-                  <div className="p-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="absolute left-0 mt-3 w-[40rem] bg-white shadow-2xl rounded-2xl border border-gray-200 overflow-hidden z-50 animate-in slide-in-from-top-2 duration-200">
+                  <div className="p-6">
+                    <h3 className="text-lg font-bold text-gray-800 mb-4">Shop by Category</h3>
+                    <div className="grid grid-cols-3 gap-3">
                       {categories.map((category) => (
-                        <Link
+                        <Redirect
                           key={category}
                           to={`/category/${category}`}
-                          className="px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-blue-400 rounded-lg transition duration-300"
+                          className="px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-blue-200"
                         >
                           {catTitle(category)}
-                        </Link>
+                        </Redirect>
                       ))}
                     </div>
                   </div>
                 </div>
               )}
-            </li>
+            </div>
             {["New Arrivals", "Best Sellers", "Deals", "Brands"].map((item) => (
-              <li key={item}>
-                <Link
-                  to={`/${item.toLowerCase().replace(" ", "-")}`}
-                  className="text-white hover:text-blue-400 transition duration-300"
-                >
-                  {item}
-                </Link>
-              </li>
+              <Redirect
+                key={item}
+                to={`/${item.toLowerCase().replace(" ", "-")}`}
+                className="text-gray-700 hover:text-blue-600 font-semibold transition-colors relative group"
+              >
+                {item}
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-200 group-hover:w-full"></span>
+              </Redirect>
             ))}
-          </ul>
+          </div>
+
+          {/* --- MOBILE NAVIGATION --- */}
+          {isMobileMenuOpen && (
+            <div className="absolute top-full left-0 w-full bg-white shadow-lg md:hidden animate-in slide-in-from-top-2 duration-200">
+              <div className="p-4 space-y-2">
+                {["New Arrivals", "Best Sellers", "Deals", "Brands"].map((item) => (
+                  <Redirect
+                    key={item}
+                    to={`/${item.toLowerCase().replace(" ", "-")}`}
+                    className="block px-4 py-3 text-gray-700 hover:text-blue-600 font-semibold transition-colors rounded-xl hover:bg-gray-50"
+                  >
+                    {item}
+                  </Redirect>
+                ))}
+                <div className="border-t border-gray-200 my-2"></div>
+
+                <Redirect
+                  to="/categories"
+                  className="flex items-center justify-between px-4 py-3 text-gray-700 hover:text-blue-600 font-semibold transition-colors rounded-xl hover:bg-gray-50"
+                >
+                  <span>All Categories</span>
+                  <ChevronRight className="w-5 h-5" />
+                </Redirect>
+              </div>
+            </div>
+          )}
         </div>
       </nav>
     </header>

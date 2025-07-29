@@ -1,5 +1,5 @@
 import { Helmet } from "react-helmet";
-import favicon from "../assets/vite.svg";
+import favicon from "../assets/logo.svg";
 
 export default function Head(props) {
   const { title } = props;
@@ -9,9 +9,9 @@ export default function Head(props) {
       <link rel="icon" type="image/svg+xml" href={favicon} />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       {title === "Home" ? (
-        <title>Test Shop</title>
+        <title>MyShop</title>
       ) : (
-        <title>{title} | Test Shop</title>
+        <title>{title} | MyShop</title>
       )}
     </Helmet>
   );
