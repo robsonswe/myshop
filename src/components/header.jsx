@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from "react"
 import { Search, Bell, ShoppingCart, User, ChevronDown, Menu, X, ChevronRight } from "lucide-react"
-import Redirect from "./link"
-import { useCategories } from "../hooks/hooks"
-import logo from "../assets/logo.svg"
+import Redirect from "@/components/link"
+import { useCategories } from "@/hooks/hooks"
+import logo from "@/assets/logo.svg"
 
 const catTitle = (cat) => cat.charAt(0).toUpperCase() + cat.slice(1).replace("-", " ")
 

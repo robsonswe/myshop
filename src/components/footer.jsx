@@ -1,5 +1,5 @@
-import Redirect from "./link"
-import logo from "../assets/logo.svg" // Using your new logo
+import Redirect from "@/components/link"
+import logo from "@/assets/logo.svg" // Using your new logo
 import {
   Mail,
   MessageCircle,

@@ -13,7 +13,7 @@ import {
     BsChevronDown,
     BsTag
 } from 'react-icons/bs';
-import Redirect from '../components/link';
+import Redirect from '@/components/link';
 
 const PriceRangeFilter = ({ min, max, value, onChange }) => (
     <div className="mb-6">

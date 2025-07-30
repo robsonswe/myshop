@@ -14,8 +14,8 @@ import {
   BsShieldCheck,
   BsQrCode
 } from "react-icons/bs";
-import { Rating } from "../components/helpers";
-import Layout from "../components/layout";
+import { Rating } from "@/components/helpers";
+import Layout from "@/components/layout";
 import Redirect from "../components/link";
 
 function ImageGallery({ images }) {

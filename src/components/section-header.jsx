@@ -1,5 +1,5 @@
 import { ArrowRight } from "lucide-react"
-import Redirect from "./link"
+import Redirect from "@/components/link"
 
 const SectionHeader = ({ title, subtitle, viewAll, className = "" }) => (
   <div className={`flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-8 ${className}`}>

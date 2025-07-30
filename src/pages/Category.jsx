@@ -1,5 +1,5 @@
-import ProductListing from '../components/products'
-import Layout from '../components/layout'
+import ProductListing from '@/components/products'
+import Layout from '@/components/layout'
 import { useParams } from 'react-router-dom'
 
 function catTitle(str) {

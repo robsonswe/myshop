@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { BsSearch, BsArrowRight, BsGrid, BsListUl } from "react-icons/bs";
-import Layout from "../components/layout";
-import { catTitle } from "../components/helpers";
-import Redirect from "../components/link";
-import { useCategoryImage, useCategories } from "../hooks/hooks";
+import Layout from "@/components/layout";
+import { catTitle } from "@/components/helpers";
+import Redirect from "@/components/link";
+import { useCategoryImage, useCategories } from "@/hooks/hooks";
 
 function CategoryCard({ category, layout = "grid" }) {
   const { image, loading } = useCategoryImage(category);

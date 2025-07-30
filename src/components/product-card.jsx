@@ -1,5 +1,3 @@
-"use client"
-
 import { useState } from "react"
 import { ShoppingCart, Heart, Star, StarHalf } from "lucide-react"
 

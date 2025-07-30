@@ -1,8 +1,8 @@
 import { ArrowRight, Sparkles, TrendingUp, Clock } from "lucide-react"
-import Layout from "../components/layout"
-import ProductCard from "../components/product-card"
-import CategoryCard from "../components/category-card"
-import SectionHeader from "../components/section-header"
+import Layout from "@/components/layout"
+import ProductCard from "@/components/product-card"
+import CategoryCard from "@/components/category-card"
+import SectionHeader from "@/components/section-header"
 import Redirect from "../components/link"
 import { useProducts, useCategories } from "../hooks/hooks"
 

@@ -2,12 +2,12 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { createHashRouter, Outlet, RouterProvider } from "react-router-dom";
 
-import Category from "./pages/Category";
-import ErrorPage from "./pages/ErrorPage";
-import Index from "./pages/Index";
-import Product from "./pages/Product";
-import Search from "./pages/Search";
-import CategoriesPage from "./pages/Categories";
+import Category from "@/pages/Category";
+import ErrorPage from "@/pages/ErrorPage";
+import Index from "@/pages/Index";
+import Product from "@/pages/Product";
+import Search from "@/pages/Search";
+import CategoriesPage from "@/pages/Categories";
 import "./tailwind.css";
 
 const routes = [

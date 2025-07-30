@@ -1,5 +1,5 @@
 import { Helmet } from "react-helmet";
-import favicon from "../assets/logo.svg";
+import favicon from "@/assets/logo.svg";
 
 export default function Head(props) {
   const { title } = props;

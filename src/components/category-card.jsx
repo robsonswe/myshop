@@ -1,6 +1,6 @@
 import PulseLoader from "react-spinners/PulseLoader"
-import { useCategoryImage } from "../hooks/hooks"
-import { catTitle } from "./helpers"
+import { useCategoryImage } from "@/hooks/hooks"
+import { catTitle } from "@/components/helpers"
 
 const CategoryCard = ({ category }) => {
   const { image, loading } = useCategoryImage(category)
