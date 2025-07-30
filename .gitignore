@@ -24,3 +24,5 @@ dist-ssr
 *.sw?
 
 ecommerce/
+tree.ps1
+myshop/

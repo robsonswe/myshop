@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-const Redirect = ({ to, children, ...rest }) => {
+const ScrollToTopLink = ({ to, children, ...rest }) => {
   const handleClick = () => {
     window.scrollTo(0, 0);
   };
@@ -12,4 +12,4 @@ const Redirect = ({ to, children, ...rest }) => {
   );
 };
 
-export default Redirect;
+export default ScrollToTopLink;

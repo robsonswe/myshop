@@ -1,4 +1,4 @@
-import Redirect from "@/components/link"
+import ScrollToTopLink from "@/components/ui/ScrollToTopLink"
 import logo from "@/assets/logo.svg" // Using your new logo
 import {
   Mail,
@@ -69,13 +69,13 @@ export default function Footer() {
           {/* Section 1: Company Info */}
           <div className="text-center md:text-left py-10 md:py-0">
             {/* --- UPDATED: Logo with Text --- */}
-            <Redirect
+            <ScrollToTopLink
               to="/"
               className="group flex items-center space-x-3 mb-6 justify-center md:justify-start"
             >
               <img src={logo} alt="MyShop Logo" className="h-10 w-auto" />
               <span className="text-2xl font-bold text-white">MyShop</span>
-            </Redirect>
+            </ScrollToTopLink>
 
             <p className="text-gray-400 mb-6 leading-relaxed">
               Your destination for quality products, great service, and unbeatable prices.
@@ -98,9 +98,9 @@ export default function Footer() {
             <ul className="space-y-3">
               {["About", "Contact", "Shipping", "Returns", "Track Order"].map((item) => (
                 <li key={item}>
-                  <Redirect to="#" className="text-gray-300 hover:text-blue-400 transition-colors duration-200">
+                  <ScrollToTopLink to="#" className="text-gray-300 hover:text-blue-400 transition-colors duration-200">
                     {item}
-                  </Redirect>
+                  </ScrollToTopLink>
                 </li>
               ))}
             </ul>
@@ -116,7 +116,7 @@ export default function Footer() {
                 { icon: Phone, title: "Call Us", value: "(870) 423-3303", href: "tel:+18704233303" },
               ].map(({ icon: Icon, title, value, href }) => (
                 <li key={title}>
-                  <Redirect
+                  <ScrollToTopLink
                     to={href}
                     className="flex items-center gap-4 group transition-colors hover:text-blue-400 justify-center md:justify-start"
                   >
@@ -127,7 +127,7 @@ export default function Footer() {
                       <div className="font-semibold text-white">{title}</div>
                       <div className="text-sm text-gray-400">{value}</div>
                     </div>
-                  </Redirect>
+                  </ScrollToTopLink>
                 </li>
               ))}
             </ul>
@@ -145,14 +145,14 @@ export default function Footer() {
                 { icon: Youtube, name: "YouTube", color: "hover:bg-red-600" },
                 { icon: Linkedin, name: "LinkedIn", color: "hover:bg-blue-700" },
               ].map(({ icon: Icon, name, color }) => (
-                <Redirect
+                <ScrollToTopLink
                   key={name}
                   to="#"
                   className={`w-12 h-12 bg-slate-800 rounded-xl flex items-center justify-center text-gray-400 hover:text-white transition-all duration-200 ${color} transform hover:scale-110`}
                   aria-label={name}
                 >
                   <Icon className="w-6 h-6" />
-                </Redirect>
+                </ScrollToTopLink>
               ))}
             </div>
           </div>
@@ -167,12 +167,12 @@ export default function Footer() {
               © {new Date().getFullYear()} MyShop. All Rights Reserved.
             </p>
             <div className="flex items-center gap-x-6 text-sm text-gray-400">
-              <Redirect to="#" className="hover:text-white transition-colors">
+              <ScrollToTopLink to="#" className="hover:text-white transition-colors">
                 Privacy
-              </Redirect>
-              <Redirect to="#" className="hover:text-white transition-colors">
+              </ScrollToTopLink>
+              <ScrollToTopLink to="#" className="hover:text-white transition-colors">
                 Terms
-              </Redirect>
+              </ScrollToTopLink>
             </div>
           </div>
         </div>

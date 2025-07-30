@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react"
 import { Search, Bell, ShoppingCart, User, ChevronDown, Menu, X, ChevronRight } from "lucide-react"
-import Redirect from "@/components/link"
-import { useCategories } from "@/hooks/hooks"
+import ScrollToTopLink from "@/components/ui/ScrollToTopLink"
+import { useCategories } from "@/features/categories/hooks/useCategories"
 import logo from "@/assets/logo.svg"
 
 const catTitle = (cat) => cat.charAt(0).toUpperCase() + cat.slice(1).replace("-", " ")
@@ -80,10 +80,10 @@ export default function Header() {
         <div className="flex items-center justify-between">
           {/* --- UPDATED: Logo with Text --- */}
           <div className="flex items-center">
-            <Redirect to="/" className="group flex items-center space-x-3">
+            <ScrollToTopLink to="/" className="group flex items-center space-x-3">
               <img src={logo} alt="MyShop Logo" className="h-10 w-auto" />
               <span className="text-2xl font-bold text-slate-900">MyShop</span>
-            </Redirect>
+            </ScrollToTopLink>
           </div>
 
           {/* Search bar - Desktop */}
@@ -188,13 +188,13 @@ export default function Header() {
                     <h3 className="text-lg font-bold text-gray-800 mb-4">Shop by Category</h3>
                     <div className="grid grid-cols-3 gap-3">
                       {categories.map((category) => (
-                        <Redirect
+                        <ScrollToTopLink
                           key={category}
                           to={`/category/${category}`}
                           className="px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-blue-200"
                         >
                           {catTitle(category)}
-                        </Redirect>
+                        </ScrollToTopLink>
                       ))}
                     </div>
                   </div>
@@ -202,14 +202,14 @@ export default function Header() {
               )}
             </div>
             {["New Arrivals", "Best Sellers", "Deals", "Brands"].map((item) => (
-              <Redirect
+              <ScrollToTopLink
                 key={item}
                 to={`/${item.toLowerCase().replace(" ", "-")}`}
                 className="text-gray-700 hover:text-blue-600 font-semibold transition-colors relative group"
               >
                 {item}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-200 group-hover:w-full"></span>
-              </Redirect>
+              </ScrollToTopLink>
             ))}
           </div>
 
@@ -218,23 +218,23 @@ export default function Header() {
             <div className="absolute top-full left-0 w-full bg-white shadow-lg md:hidden animate-in slide-in-from-top-2 duration-200">
               <div className="p-4 space-y-2">
                 {["New Arrivals", "Best Sellers", "Deals", "Brands"].map((item) => (
-                  <Redirect
+                  <ScrollToTopLink
                     key={item}
                     to={`/${item.toLowerCase().replace(" ", "-")}`}
                     className="block px-4 py-3 text-gray-700 hover:text-blue-600 font-semibold transition-colors rounded-xl hover:bg-gray-50"
                   >
                     {item}
-                  </Redirect>
+                  </ScrollToTopLink>
                 ))}
                 <div className="border-t border-gray-200 my-2"></div>
 
-                <Redirect
+                <ScrollToTopLink
                   to="/categories"
                   className="flex items-center justify-between px-4 py-3 text-gray-700 hover:text-blue-600 font-semibold transition-colors rounded-xl hover:bg-gray-50"
                 >
                   <span>All Categories</span>
                   <ChevronRight className="w-5 h-5" />
-                </Redirect>
+                </ScrollToTopLink>
               </div>
             </div>
           )}

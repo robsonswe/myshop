@@ -1,5 +1,5 @@
-import ProductListing from '@/components/products'
-import Layout from '@/components/layout'
+import ProductListing from '@/features/products/components/ProductList.jsx'
+import Layout from '@/components/layout/Layout'
 import { useParams } from 'react-router-dom'
 
 export default function Search() {

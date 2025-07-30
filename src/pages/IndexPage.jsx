@@ -1,10 +1,11 @@
 import { ArrowRight, Sparkles, TrendingUp, Clock } from "lucide-react"
-import Layout from "@/components/layout"
-import ProductCard from "@/components/product-card"
-import CategoryCard from "@/components/category-card"
-import SectionHeader from "@/components/section-header"
-import Redirect from "../components/link"
-import { useProducts, useCategories } from "../hooks/hooks"
+import Layout from "@/components/layout/Layout"
+import ProductCard from "@/features/products/components/ProductCard"
+import CategoryCard from "@/features/categories/components/CategoryCard"
+import SectionHeader from "@/components/ui/SectionHeader"
+import ScrollToTopLink from "@/components/ui/ScrollToTopLink"
+import { useProducts } from "@/features/products/hooks/useProducts"
+import { useCategories } from "@/features/categories/hooks/useCategories"
 
 const HeroSection = () => (
   <section className="relative overflow-hidden bg-blue-600 rounded-3xl p-8 md:p-12 lg:p-16 text-white mb-16">
@@ -31,20 +32,20 @@ const HeroSection = () => (
       </p>
 
       <div className="flex flex-col sm:flex-row gap-4">
-        <Redirect
+        <ScrollToTopLink
           to="/sale"
           className="inline-flex items-center justify-center gap-3 bg-white text-blue-600 px-8 py-4 rounded-2xl font-bold text-lg hover:bg-blue-50 transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
         >
           <span>Shop Sale Now</span>
           <ArrowRight className="w-6 h-6" />
-        </Redirect>
+        </ScrollToTopLink>
 
-        <Redirect
+        <ScrollToTopLink
           to="/products"
           className="inline-flex items-center justify-center gap-3 bg-white/10 backdrop-blur-sm text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-white/20 transition-all duration-200 border-2 border-white/20 hover:border-white/40"
         >
           <span>Browse All</span>
-        </Redirect>
+        </ScrollToTopLink>
       </div>
     </div>
   </section>
@@ -84,9 +85,9 @@ const Categories = () => {
       />
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
         {randomCategories.map((category) => (
-          <Redirect to={`/category/${category}`} key={category}>
+          <ScrollToTopLink to={`/category/${category}`} key={category}>
             <CategoryCard category={category} />
-          </Redirect>
+          </ScrollToTopLink>
         ))}
       </div>
     </section>
@@ -145,9 +146,9 @@ const ProductSection = ({ type, title, subtitle }) => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {products.map((product) => (
-            <Redirect to={`/product/${product.id}`} key={product.id}>
+            <ScrollToTopLink to={`/product/${product.id}`} key={product.id}>
               <ProductCard product={product} onAddToCart={handleAddToCart} onToggleWishlist={handleToggleWishlist} />
-            </Redirect>
+            </ScrollToTopLink>
           ))}
         </div>
       )}
@@ -155,7 +156,7 @@ const ProductSection = ({ type, title, subtitle }) => {
   )
 }
 
-export default function Index() {
+export default function IndexPage() {
   return (
     <Layout title="Home">
       <div className="bg-gray-50 min-h-screen">

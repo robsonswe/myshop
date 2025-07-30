@@ -13,7 +13,7 @@ import {
     BsChevronDown,
     BsTag
 } from 'react-icons/bs';
-import Redirect from '@/components/link';
+import ScrollToTopLink from '@/components/ui/ScrollToTopLink';
 
 const PriceRangeFilter = ({ min, max, value, onChange }) => (
     <div className="mb-6">
@@ -54,7 +54,7 @@ const ProductCard = ({ product }) => {
 
     return (
         <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 group relative">
-            <Redirect to={`/product/${product.id}`}>
+            <ScrollToTopLink to={`/product/${product.id}`}>
                 <div className="relative overflow-hidden rounded-t-xl">
                     <img
                         src={product.thumbnail}
@@ -96,7 +96,7 @@ const ProductCard = ({ product }) => {
                         </span>
                     </div>
                 </div>
-            </Redirect>
+            </ScrollToTopLink>
 
             <div className="px-4 pb-4">
                 <button
