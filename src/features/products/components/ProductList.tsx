@@ -4,11 +4,13 @@ import {
     BsStar,
     BsSearch,
     BsChevronDown,
-    BsTag
+    BsTag,
+    BsFilter,
+    BsX,
 } from 'react-icons/bs';
 import ScrollToTopLink from '@/components/ui/ScrollToTopLink';
 import { Product } from '@/entities/product/model/types';
-import ProductCard from './ProductCard'; // Assuming ProductCard.tsx is in the same folder
+import ProductCard from './ProductCard';
 
 interface PriceRangeFilterProps {
     min: number;
@@ -104,15 +106,17 @@ const ProductListing = ({ fetchUrl, title }: ProductListingProps) => {
     const [availableCategories, setAvailableCategories] = useState<string[]>([]);
     const [availableBrands, setAvailableBrands] = useState<string[]>([]);
 
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
+
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
             try {
                 const res = await fetch(fetchUrl);
                 const data = await res.json();
-                
+
                 setProducts(data.products);
-                const highestPrice = Math.max(...data.products.map((p: Product) => p.price));
+                const highestPrice = Math.max(0, ...data.products.map((p: Product) => p.price)); // Added 0 to handle empty products array
                 setMaxPrice(Math.ceil(highestPrice));
                 setCurrentPrice(Math.ceil(highestPrice));
 
@@ -160,17 +164,15 @@ const ProductListing = ({ fetchUrl, title }: ProductListingProps) => {
         setInStockOnly(false);
         setSearchQuery('');
         setSortBy('');
+        setIsFilterOpen(false); 
     };
-    
-    // Placeholder handlers for the ProductCard component
+
     const handleAddToCart = (product: Product) => {
-        // In a real app, you would dispatch an action to a global store (e.g., Redux, Zustand)
         console.log("Added to cart:", product.title);
         alert(`${product.title} added to cart!`);
     };
 
     const handleToggleWishlist = (id: number, isWishlist: boolean) => {
-        // In a real app, you would make an API call and update a global store
         console.log(`Product ID ${id} wishlist status:`, isWishlist);
     };
 
@@ -179,14 +181,27 @@ const ProductListing = ({ fetchUrl, title }: ProductListingProps) => {
         <div className="bg-gradient-to-b from-gray-50 to-white min-h-screen">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div className="flex flex-col lg:flex-row gap-8">
-                    {/* Filters Sidebar */}
-                    <aside className="lg:w-72">
-                        <div className="bg-white rounded-xl shadow-sm p-6 sticky top-24">
+
+      
+                    <aside
+                        className={`
+                            fixed inset-0 bg-white z-50 transform transition-transform duration-300 ease-in-out 
+                            lg:static lg:transform-none lg:bg-transparent lg:z-auto lg:w-72
+                            ${isFilterOpen ? 'translate-x-0' : '-translate-x-full'}
+                        `}
+                    >
+                        <div className="bg-white h-full lg:rounded-xl lg:shadow-sm p-6 overflow-y-auto">
                             <div className="flex justify-between items-center mb-6">
                                 <h3 className="text-xl font-bold">Filters</h3>
                                 <button
+                                    onClick={() => setIsFilterOpen(false)}
+                                    className="lg:hidden text-gray-500 hover:text-gray-800"
+                                >
+                                    <BsX size={28} />
+                                </button>
+                                <button
                                     onClick={clearAllFilters}
-                                    className="text-blue-600 text-sm hover:text-blue-700"
+                                    className="text-blue-600 text-sm hover:text-blue-700 hidden lg:block"
                                 >
                                     Clear all
                                 </button>
@@ -280,7 +295,8 @@ const ProductListing = ({ fetchUrl, title }: ProductListingProps) => {
                                                     <span className="capitalize">{brand}</span>
                                                 </label>
                                             ))}
-                                    </div>                </FilterSection>
+                                    </div>
+                                </FilterSection>
 
                                 <FilterSection title="Stock Status">
                                     <label className="flex items-center space-x-2 text-sm">
@@ -315,6 +331,15 @@ const ProductListing = ({ fetchUrl, title }: ProductListingProps) => {
                         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
                             <h1 className="text-3xl font-bold">{title}</h1>
                             <div className="flex items-center gap-4">
+                                {/* Mobile Filter Button */}
+                                <button
+                                    onClick={() => setIsFilterOpen(true)}
+                                    className="lg:hidden flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50"
+                                >
+                                    <BsFilter className="text-gray-600" />
+                                    <span className="font-medium">Filters</span>
+                                </button>
+                                {/* Sort By Dropdown */}
                                 <select
                                     value={sortBy}
                                     onChange={e => setSortBy(e.target.value)}
@@ -361,6 +386,13 @@ const ProductListing = ({ fetchUrl, title }: ProductListingProps) => {
                     </main>
                 </div>
             </div>
+
+            {isFilterOpen && (
+                <div
+                    onClick={() => setIsFilterOpen(false)}
+                    className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+                ></div>
+            )}
         </div>
     );
 };
