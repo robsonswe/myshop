@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, FormEvent } from "react"
+import { useNavigate } from "react-router-dom"
 import { Search, Bell, ShoppingCart, User, ChevronDown, Menu, X, ChevronRight } from "lucide-react"
 import ScrollToTopLink from "@/components/ui/ScrollToTopLink"
 import { useCategories } from "@/features/categories/hooks/useCategories"
@@ -11,11 +12,13 @@ export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const megaMenuRef = useRef<HTMLDivElement>(null)
   const categories = useCategories()
+  const navigate = useNavigate()
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
-    if (searchTerm) {
-      console.log("Searching for:", searchTerm)
+    const trimmedSearchTerm = searchTerm.trim()
+    if (trimmedSearchTerm) {
+      navigate(`/search/${trimmedSearchTerm}`)
     }
   }
 
