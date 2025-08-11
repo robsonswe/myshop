@@ -24,7 +24,7 @@ const routes = [
     errorElement: <ErrorPage />,
   },
   {
-    path: `/category/:categoryId`,
+    path: `/category/:categorySlug`,
     element: <CategoryPage />,
     errorElement: <ErrorPage />,
   },
