@@ -1,21 +1,40 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ReactNode } from 'react';
 import {
-    BsCart4,
     BsStarFill,
-    BsStarHalf,
     BsStar,
-    BsHeart,
-    BsHeartFill,
     BsSearch,
-    BsGrid,
-    BsList,
-    BsX,
     BsChevronDown,
     BsTag
 } from 'react-icons/bs';
 import ScrollToTopLink from '@/components/ui/ScrollToTopLink';
+import { Product } from '@/entities/product/model/types';
+import ProductCard from './ProductCard'; // Assuming ProductCard.tsx is in the same folder
 
-const PriceRangeFilter = ({ min, max, value, onChange }) => (
+interface PriceRangeFilterProps {
+    min: number;
+    max: number;
+    value: number;
+    onChange: (arg0: number) => void;
+}
+
+interface RatingFilterItemProps {
+    stars: number;
+    selected: boolean;
+    onClick: React.MouseEventHandler<HTMLButtonElement>;
+}
+
+interface FilterSectionProps {
+    title: string;
+    children: ReactNode;
+    isOpen?: boolean;
+}
+
+interface ProductListingProps {
+    fetchUrl: string;
+    title: string;
+}
+
+const PriceRangeFilter = ({ min, max, value, onChange }: PriceRangeFilterProps) => (
     <div className="mb-6">
         <div className="flex justify-between text-sm mb-2">
             <span className="text-gray-500">Price range</span>
@@ -32,7 +51,7 @@ const PriceRangeFilter = ({ min, max, value, onChange }) => (
     </div>
 );
 
-const RatingFilterItem = ({ stars, selected, onClick }) => (
+const RatingFilterItem = ({ stars, selected, onClick }: RatingFilterItemProps) => (
     <button
         onClick={onClick}
         className={`w-full p-2 rounded-lg flex items-center gap-2 transition-colors ${selected ? 'bg-blue-50 border border-blue-200' : 'hover:bg-gray-50'
@@ -49,84 +68,8 @@ const RatingFilterItem = ({ stars, selected, onClick }) => (
     </button>
 );
 
-const ProductCard = ({ product }) => {
-    const [isWishlist, setIsWishlist] = useState(false);
 
-    return (
-        <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 group relative">
-            <ScrollToTopLink to={`/product/${product.id}`}>
-                <div className="relative overflow-hidden rounded-t-xl">
-                    <img
-                        src={product.thumbnail}
-                        alt={product.title}
-                        className="w-full h-52 object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-
-                    {product.discountPercentage > 0 && (
-                        <span className="absolute top-2 left-2 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">
-                            -{Math.round(product.discountPercentage)}%
-                        </span>
-                    )}
-                </div>
-
-                <div className="p-4">
-                    <div className="flex justify-between items-start mb-2">
-                        <h3 className="font-semibold text-lg truncate flex-1">{product.title}</h3>
-                        <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded">{product.brand}</span>
-                    </div>
-
-                    <div className="flex items-center gap-1 mb-2">
-                        {[...Array(5)].map((_, i) => {
-                            if (i < Math.floor(product.rating)) return <BsStarFill key={i} className="text-yellow-400" />
-                            if (i === Math.floor(product.rating) && product.rating % 1 >= 0.5) return <BsStarHalf key={i} className="text-yellow-400" />
-                            return <BsStar key={i} className="text-yellow-400" />
-                        })}
-                        <span className="ml-1 text-sm text-gray-500">({product.rating})</span>
-                    </div>
-
-                    <div className="flex justify-between items-center mb-3">
-                        <div className="flex items-baseline gap-2">
-                            <span className="text-xl font-bold text-blue-600">${product.price}</span>
-                            {product.discountPercentage > 0 && (
-                                <span className="text-sm text-gray-400 line-through">${product.originalPrice}</span>
-                            )}
-                        </div>
-                        <span className={`text-sm ${product.stock < 10 ? 'text-red-600' : 'text-green-600'}`}>
-                            {product.stock < 10 ? `${product.stock} left` : 'In Stock'}
-                        </span>
-                    </div>
-                </div>
-            </ScrollToTopLink>
-
-            <div className="px-4 pb-4">
-                <button
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        setIsWishlist(!isWishlist);
-                    }}
-                    className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-sm hover:bg-gray-50 transition-colors"
-                    aria-label={isWishlist ? "Remove from wishlist" : "Add to wishlist"}
-                >
-                    {isWishlist ? (
-                        <BsHeartFill className="text-red-500 animate-pulse" />
-                    ) : (
-                        <BsHeart className="text-gray-600" />
-                    )}
-                </button>
-
-                <button
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md transition-colors flex items-center justify-center gap-2"
-                    onClick={(e) => e.stopPropagation()}
-                >
-                    <BsCart4 className="text-lg" /> Add to Cart
-                </button>
-            </div>
-        </div>
-    );
-};
-
-
-const FilterSection = ({ title, children, isOpen = true }) => {
+const FilterSection = ({ title, children, isOpen = true }: FilterSectionProps) => {
     const [open, setOpen] = useState(isOpen);
 
     return (
@@ -145,22 +88,21 @@ const FilterSection = ({ title, children, isOpen = true }) => {
     );
 };
 
-const ProductListing = ({ fetchUrl, title }) => {
-    const [products, setProducts] = useState([]);
+const ProductListing = ({ fetchUrl, title }: ProductListingProps) => {
+    const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [maxPrice, setMaxPrice] = useState(1000);
     const [currentPrice, setCurrentPrice] = useState(1000);
-    const [selectedRating, setSelectedRating] = useState(null);
+    const [selectedRating, setSelectedRating] = useState<number | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [sortBy, setSortBy] = useState('');
-    const [selectedProduct, setSelectedProduct] = useState(null);
-    const [selectedCategories, setSelectedCategories] = useState([]);
-    const [selectedBrands, setSelectedBrands] = useState([]);
+    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+    const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
     const [inStockOnly, setInStockOnly] = useState(false);
     const [categorySearch, setCategorySearch] = useState('');
     const [brandSearch, setBrandSearch] = useState('');
-    const [availableCategories, setAvailableCategories] = useState([]);
-    const [availableBrands, setAvailableBrands] = useState([]);
+    const [availableCategories, setAvailableCategories] = useState<string[]>([]);
+    const [availableBrands, setAvailableBrands] = useState<string[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -168,20 +110,16 @@ const ProductListing = ({ fetchUrl, title }) => {
             try {
                 const res = await fetch(fetchUrl);
                 const data = await res.json();
-                const productsWithOriginalPrice = data.products.map(p => ({
-                    ...p,
-                    originalPrice: Math.round(p.price / (1 - p.discountPercentage / 100))
-                }));
-
-                setProducts(productsWithOriginalPrice);
-                const highestPrice = Math.max(...productsWithOriginalPrice.map(p => p.price));
+                
+                setProducts(data.products);
+                const highestPrice = Math.max(...data.products.map((p: Product) => p.price));
                 setMaxPrice(Math.ceil(highestPrice));
                 setCurrentPrice(Math.ceil(highestPrice));
 
-                const categories = [...new Set(productsWithOriginalPrice.map(p => p.category))];
-                const brands = [...new Set(productsWithOriginalPrice.map(p => p.brand))];
-                setAvailableCategories(categories);
-                setAvailableBrands(brands);
+                const categories = [...new Set(data.products.map((p: Product) => p.category))];
+                const brands = [...new Set(data.products.map((p: Product) => p.brand))];
+                setAvailableCategories(categories as string[]);
+                setAvailableBrands(brands as string[]);
             } catch (error) {
                 console.error('Error fetching products:', error);
             }
@@ -223,13 +161,26 @@ const ProductListing = ({ fetchUrl, title }) => {
         setSearchQuery('');
         setSortBy('');
     };
+    
+    // Placeholder handlers for the ProductCard component
+    const handleAddToCart = (product: Product) => {
+        // In a real app, you would dispatch an action to a global store (e.g., Redux, Zustand)
+        console.log("Added to cart:", product.title);
+        alert(`${product.title} added to cart!`);
+    };
+
+    const handleToggleWishlist = (id: number, isWishlist: boolean) => {
+        // In a real app, you would make an API call and update a global store
+        console.log(`Product ID ${id} wishlist status:`, isWishlist);
+    };
+
 
     return (
         <div className="bg-gradient-to-b from-gray-50 to-white min-h-screen">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div className="flex flex-col lg:flex-row gap-8">
                     {/* Filters Sidebar */}
-                    <div className="lg:w-72">
+                    <aside className="lg:w-72">
                         <div className="bg-white rounded-xl shadow-sm p-6 sticky top-24">
                             <div className="flex justify-between items-center mb-6">
                                 <h3 className="text-xl font-bold">Filters</h3>
@@ -316,7 +267,7 @@ const ProductListing = ({ fetchUrl, title }) => {
                                                 <label key={brand} className="flex items-center space-x-2 text-sm">
                                                     <input
                                                         type="checkbox"
-                                                        checked={selectedBrands.includes(brand)}
+                                                        checked={selectedBrands.includes(brand as never)}
                                                         onChange={(e) => {
                                                             if (e.target.checked) {
                                                                 setSelectedBrands([...selectedBrands, brand]);
@@ -357,10 +308,10 @@ const ProductListing = ({ fetchUrl, title }) => {
                                 </FilterSection>
                             </div>
                         </div>
-                    </div>
+                    </aside>
 
                     {/* Main Content */}
-                    <div className="flex-1">
+                    <main className="flex-1">
                         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
                             <h1 className="text-3xl font-bold">{title}</h1>
                             <div className="flex items-center gap-4">
@@ -378,7 +329,7 @@ const ProductListing = ({ fetchUrl, title }) => {
                         </div>
 
                         {loading ? (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                                 {[...Array(6)].map((_, i) => (
                                     <div key={i} className="bg-white rounded-xl shadow-sm p-4 animate-pulse">
                                         <div className="bg-gray-200 h-52 rounded-xl mb-4"></div>
@@ -397,24 +348,19 @@ const ProductListing = ({ fetchUrl, title }) => {
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                                 {filteredProducts.map(product => (
-                                    <ProductCard
-                                        key={product.id}
-                                        product={product}
-                                        onQuickView={setSelectedProduct}
-                                    />
+                                    <ScrollToTopLink key={product.id} to={`/product/${product.id}`}>
+                                        <ProductCard
+                                            product={product}
+                                            onAddToCart={handleAddToCart}
+                                            onToggleWishlist={handleToggleWishlist}
+                                        />
+                                    </ScrollToTopLink>
                                 ))}
                             </div>
                         )}
-                    </div>
+                    </main>
                 </div>
             </div>
-
-            {selectedProduct && (
-                <ProductModal
-                    product={selectedProduct}
-                    onClose={() => setSelectedProduct(null)}
-                />
-            )}
         </div>
     );
 };

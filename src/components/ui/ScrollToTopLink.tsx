@@ -1,6 +1,13 @@
+import { ReactNode } from "react";
 import { Link } from "react-router-dom";
 
-const ScrollToTopLink = ({ to, children, ...rest }) => {
+interface ScrollToDropProps {
+  to: string;
+  children: ReactNode;
+  className?: string;
+}
+
+const ScrollToTopLink = ({ to, children, ...rest }: ScrollToDropProps) => {
   const handleClick = () => {
     window.scrollTo(0, 0);
   };

@@ -4,8 +4,15 @@ import ProductCard from "@/features/products/components/ProductCard"
 import CategoryCard from "@/features/categories/components/CategoryCard"
 import SectionHeader from "@/components/ui/SectionHeader"
 import ScrollToTopLink from "@/components/ui/ScrollToTopLink"
-import { useProducts } from "@/features/products/hooks/useProducts"
+import { ProductQueryParams, useProducts } from "@/features/products/hooks/useProducts"
 import { useCategories } from "@/features/categories/hooks/useCategories"
+import { Product } from "@/entities/product/model/types"
+
+interface ProductSectionProps {
+  type: string;
+  title: string;
+  subtitle: string;
+}
 
 const HeroSection = () => (
   <section className="relative overflow-hidden bg-blue-600 rounded-3xl p-8 md:p-12 lg:p-16 text-white mb-16">
@@ -85,7 +92,7 @@ const Categories = () => {
       />
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
         {randomCategories.map((category) => (
-          <ScrollToTopLink to={`/category/${category}`} key={category}>
+          <ScrollToTopLink to={`/category/${category.slug}`} key={category.slug}>
             <CategoryCard category={category} />
           </ScrollToTopLink>
         ))}
@@ -94,8 +101,9 @@ const Categories = () => {
   )
 }
 
-const ProductSection = ({ type, title, subtitle }) => {
-  const getQueryParams = () => {
+const ProductSection = ({ type, title, subtitle }: ProductSectionProps) => {
+  
+  const getQueryParams = (): ProductQueryParams => {
     switch (type) {
       case "Best Sellers":
         return {
@@ -103,33 +111,34 @@ const ProductSection = ({ type, title, subtitle }) => {
           order: "desc",
           limit: 8,
           select: "title,price,rating,thumbnail,brand,discountPercentage,stock",
-        }
+        };
       case "New Arrivals":
         return {
           sortBy: "id",
           order: "desc",
           limit: 8,
           select: "title,price,rating,thumbnail,brand,discountPercentage,stock",
-        }
+        };
       case "Featured Products":
         return {
           limit: 8,
           skip: 8,
           select: "title,price,rating,thumbnail,brand,discountPercentage,stock",
-        }
+        };
       default:
-        return { limit: 8 }
+        return { limit: 8 };
     }
   }
 
+
   const { products, error } = useProducts(getQueryParams())
 
-  const handleAddToCart = (product) => {
+  const handleAddToCart = (product: Product): void => {
     console.log("Added to cart:", product)
     // Add your cart logic here
   }
 
-  const handleToggleWishlist = (productId, isWishlist) => {
+  const handleToggleWishlist = (productId: number, isWishlist: boolean): void => {
     console.log("Wishlist toggled:", productId, isWishlist)
     // Add your wishlist logic here
   }
@@ -145,7 +154,7 @@ const ProductSection = ({ type, title, subtitle }) => {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {products.map((product) => (
+          {products.map((product: Product) => (
             <ScrollToTopLink to={`/product/${product.id}`} key={product.id}>
               <ProductCard product={product} onAddToCart={handleAddToCart} onToggleWishlist={handleToggleWishlist} />
             </ScrollToTopLink>

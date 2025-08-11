@@ -14,7 +14,7 @@ const routes = [
     errorElement: <ErrorPage />,
   },
   {
-    path: `/categories`, // Note: removed trailing slash for consistency
+    path: `/categories`,
     element: <CategoriesPage />,
     errorElement: <ErrorPage />,
   },

@@ -13,9 +13,10 @@ import {
   Clock,
   Send,
 } from "lucide-react"
+import { FormEvent } from "react"
 
 export default function Footer() {
-  const handleNewsletterSubmit = (e) => {
+  const handleNewsletterSubmit = (e: FormEvent) => {
     e.preventDefault()
     console.log("Newsletter subscription")
   }

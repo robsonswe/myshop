@@ -1,8 +1,12 @@
-import React from 'react';
 import { BsShare } from 'react-icons/bs';
 import Rating from '@/components/ui/Rating';
+import { Review } from '@/entities/review/model/types';
 
-export default function ReviewCard({ review }) {
+interface ReviewCardProps {
+  review: Review;
+}
+
+export default function ReviewCard({ review } : ReviewCardProps) {
   return (
     <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between gap-4">

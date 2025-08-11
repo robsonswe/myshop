@@ -1,20 +1,30 @@
+import { Product } from "@/entities/product/model/types";
 import { useEffect, useState } from "react";
 
-export function useProducts(options = {}) {
+export type ProductQueryParams = {
+  limit?: number;
+  skip?: number;
+  select?: string;
+  sortBy?: string;
+  order?: "asc" | "desc";
+};
+
+
+export function useProducts(options: ProductQueryParams | number = {}) {
   if (typeof options === "number") {
     options = { limit: options };
   }
 
   const { limit = 10, skip, select, sortBy, order } = options;
-  const [products, setProducts] = useState([]);
-  const [error, setError] = useState(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const params = new URLSearchParams();
-        params.set("limit", limit);
-        if (skip !== undefined) params.set("skip", skip);
+        params.set("limit", String(limit));
+        if (skip !== undefined) params.set("skip", String(skip));
         if (select) params.set("select", select);
         if (sortBy) params.set("sortBy", sortBy);
         if (order) params.set("order", order);
@@ -26,7 +36,7 @@ export function useProducts(options = {}) {
         setProducts(data.products);
       } catch (error) {
         console.error("Error fetching products:", error);
-        setError(error);
+        setError(error as Error);
       }
     };
 

@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import Layout from "@/components/layout/Layout";
 import ProductImageGallery from "@/features/products/components/ProductImageGallery";
 import ProductDetails from "@/features/products/components/ProductDetails";
 import ProductReviews from "@/features/products/components/ProductReviews";
+import { Product } from "@/entities/product/model/types";
 
 export default function ProductPage() {
   const { productId } = useParams();
-  const [product, setProduct] = useState(null);
+  const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

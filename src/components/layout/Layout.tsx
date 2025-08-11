@@ -1,8 +1,14 @@
 import Footer from "@/components/layout/Footer"
 import Head from "@/components/ui/Head"
 import Header from "@/components/layout/Header"
+import { ReactNode } from "react";
 
-export default function Layout({ title = "Undefined", children }) {
+interface LayoutProps {
+  title: string;
+  children: ReactNode
+}
+
+export default function Layout({ title = "Undefined", children }: LayoutProps) {
   return (
     <>
       <Head title={title} />

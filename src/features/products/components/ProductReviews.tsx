@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import ReviewCard from './ReviewCard';
+import { Review } from '@/entities/review/model/types';
+interface ProductReviewsProps {
+  reviews: Review[];
+}
 
-export default function ProductReviews({ reviews }) {
+export default function ProductReviews({ reviews } : ProductReviewsProps) {
   const [sortBy, setSortBy] = useState("newest");
 
   const sortedReviews = [...reviews].sort((a, b) => {
@@ -12,7 +16,7 @@ export default function ProductReviews({ reviews }) {
         return a.rating - b.rating;
       case "newest":
       default:
-        return new Date(b.date) - new Date(a.date);
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
     }
   });
 

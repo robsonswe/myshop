@@ -1,19 +1,18 @@
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, FormEvent } from "react"
 import { Search, Bell, ShoppingCart, User, ChevronDown, Menu, X, ChevronRight } from "lucide-react"
 import ScrollToTopLink from "@/components/ui/ScrollToTopLink"
 import { useCategories } from "@/features/categories/hooks/useCategories"
 import logo from "@/assets/logo.svg"
-
-const catTitle = (cat) => cat.charAt(0).toUpperCase() + cat.slice(1).replace("-", " ")
+import { catTitle } from "@/lib/formatters"
 
 export default function Header() {
   const [searchTerm, setSearchTerm] = useState("")
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const megaMenuRef = useRef(null)
+  const megaMenuRef = useRef<HTMLDivElement>(null)
   const categories = useCategories()
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
     if (searchTerm) {
       console.log("Searching for:", searchTerm)
@@ -24,18 +23,21 @@ export default function Header() {
     setIsMegaMenuOpen(!isMegaMenuOpen)
   }
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (megaMenuRef.current && !megaMenuRef.current.contains(event.target)) {
-        setIsMegaMenuOpen(false)
-      }
-    }
 
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [])
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!megaMenuRef.current) return;
+      if (!event.target || !(event.target instanceof Node)) return;
+
+      if (!megaMenuRef.current.contains(event.target)) {
+        setIsMegaMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
 
   // Close mobile menu when switching to desktop view
   useEffect(() => {
@@ -78,7 +80,6 @@ export default function Header() {
       {/* Main header */}
       <div className="container mx-auto px-4 py-6">
         <div className="flex items-center justify-between">
-          {/* --- UPDATED: Logo with Text --- */}
           <div className="flex items-center">
             <ScrollToTopLink to="/" className="group flex items-center space-x-3">
               <img src={logo} alt="MyShop Logo" className="h-10 w-auto" />
@@ -177,9 +178,8 @@ export default function Header() {
               >
                 <span>All Categories</span>
                 <ChevronDown
-                  className={`w-4 h-4 transform transition-transform duration-200 ${
-                    isMegaMenuOpen ? "rotate-180" : ""
-                  } group-hover:text-blue-600`}
+                  className={`w-4 h-4 transform transition-transform duration-200 ${isMegaMenuOpen ? "rotate-180" : ""
+                    } group-hover:text-blue-600`}
                 />
               </button>
               {isMegaMenuOpen && (
@@ -189,11 +189,11 @@ export default function Header() {
                     <div className="grid grid-cols-3 gap-3">
                       {categories.map((category) => (
                         <ScrollToTopLink
-                          key={category}
-                          to={`/category/${category}`}
+                          key={category.name}
+                          to={`/category/${category.slug}`}
                           className="px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-xl transition-all duration-200 font-medium border border-transparent hover:border-blue-200"
                         >
-                          {catTitle(category)}
+                          {catTitle(category.name)}
                         </ScrollToTopLink>
                       ))}
                     </div>

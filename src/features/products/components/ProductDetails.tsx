@@ -1,14 +1,26 @@
-import React, { useState } from "react";
-import { 
+import { useState } from "react";
+import {
   BsCart4, BsHeart, BsShare, BsArrowLeft, BsCheckCircleFill,
   BsTruck, BsReceipt, BsShieldCheck, BsBox, BsBoxSeam
 } from "react-icons/bs";
 import Rating from "@/components/ui/Rating";
 import ScrollToTopLink from "@/components/ui/ScrollToTopLink";
 import { catTitle } from "@/lib/formatters";
+import { IconType } from "react-icons";
+import { Product } from "@/entities/product/model/types";
+
+interface ProductInfoItemProps {
+  label: string;
+  value: string;
+  icon: IconType;
+}
+
+interface ProductDetailsProps {
+  product: Product;
+}
 
 // A small, internal helper component for displaying info items
-function ProductInfoItem({ label, value, icon: Icon }) {
+function ProductInfoItem({ label, value, icon: Icon }: ProductInfoItemProps) {
   return (
     <div className="flex items-start gap-4">
       <Icon className="text-lg text-gray-600 mt-1 flex-shrink-0" />
@@ -20,12 +32,12 @@ function ProductInfoItem({ label, value, icon: Icon }) {
   );
 }
 
-export default function ProductDetails({ product }) {
+export default function ProductDetails({ product }: ProductDetailsProps) {
   const [quantity, setQuantity] = useState(product.minimumOrderQuantity || 1);
-  
+
   const stockStatus = product.stock <= 5 ? 'Low Stock' : 'In Stock';
   const stockStatusColor = product.stock <= 5 ? 'text-orange-600' : 'text-green-600';
-  
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4 text-sm">
@@ -71,7 +83,7 @@ export default function ProductDetails({ product }) {
       </div>
 
       <div className="flex flex-wrap gap-2">
-        {product.tags.map(tag => (
+        {product.tags.map((tag: string) => (
           <span key={tag} className="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-700 font-medium">
             {tag}
           </span>
@@ -81,18 +93,18 @@ export default function ProductDetails({ product }) {
       <div className="flex items-center gap-4">
         <label className="font-medium text-gray-800">Quantity</label>
         <div className="flex items-center border border-gray-200 rounded-lg">
-          <button 
+          <button
             onClick={() => setQuantity(Math.max(product.minimumOrderQuantity || 1, quantity - 1))}
             className="px-4 py-2 text-lg hover:bg-gray-50 rounded-l-lg"
           >−</button>
-          <input 
-            type="number" 
+          <input
+            type="number"
             value={quantity}
             onChange={(e) => setQuantity(Math.max(product.minimumOrderQuantity || 1, parseInt(e.target.value) || 0))}
             className="w-16 text-center border-x border-gray-200 focus:outline-none"
             min={product.minimumOrderQuantity || 1}
           />
-          <button 
+          <button
             onClick={() => setQuantity(quantity + 1)}
             className="px-4 py-2 text-lg hover:bg-gray-50 rounded-r-lg"
           >+</button>

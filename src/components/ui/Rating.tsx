@@ -1,7 +1,8 @@
-// src/components/ui/Rating.jsx
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 
-export default function Rating({ stars }) {
+interface RatingProps { stars: number };
+
+export default function Rating({ stars }: RatingProps) {
   const maxStars = 5;
   const filledStars = Math.floor(stars > maxStars ? maxStars : stars);
   const outlineStars = maxStars - filledStars;
