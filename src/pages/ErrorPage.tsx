@@ -2,7 +2,7 @@ import { useRouteError } from "react-router-dom"
 import Layout from "@/components/layout/Layout"
 
 export default function ErrorPage() {
-  const error = useRouteError()
+  const error = useRouteError() as { statusText?: string; message?: string } | null;
 
   return (
     <Layout title="Error">
@@ -11,7 +11,7 @@ export default function ErrorPage() {
           <h1 className="text-4xl font-bold text-red-600 mb-4">Oops!</h1>
           <p className="text-xl mb-4">Sorry, an unexpected error has occurred.</p>
           <p className="text-gray-600 mb-8">
-            <i>{error.statusText || error.message}</i>
+            <i>{error?.statusText ?? error?.message ?? 'Unknown error'}</i>
           </p>
           <a
             href="/"

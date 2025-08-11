@@ -1,7 +1,14 @@
 import { ArrowRight } from "lucide-react"
 import ScrollToTopLink from "@/components/ui/ScrollToTopLink"
 
-const SectionHeader = ({ title, subtitle, viewAll, className = "" }) => (
+interface SectionHeaderProps {
+  title: string;
+  subtitle: string;
+  viewAll: string;
+  className?: string;
+}
+
+const SectionHeader = ({ title, subtitle, viewAll, className = "" }: SectionHeaderProps) => (
   <div className={`flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-8 ${className}`}>
     <div>
       <h2 className="text-3xl font-bold text-gray-900 mb-2">{title}</h2>

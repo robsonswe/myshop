@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { BsSearch, BsArrowRight, BsGrid, BsListUl } from "react-icons/bs";
+import { useState } from 'react';
+import { BsSearch, BsGrid, BsListUl } from "react-icons/bs";
 import Layout from "@/components/layout/Layout";
 import ScrollToTopLink from "@/components/ui/ScrollToTopLink";
 import { useCategories } from './hooks/useCategories';
@@ -8,10 +8,10 @@ import CategoryCard from './components/CategoryCard';
 export default function CategoriesPage() {
   const categories = useCategories();
   const [searchTerm, setSearchTerm] = useState("");
-  const [layout, setLayout] = useState("grid");
+  const [layout, setLayout] = useState<"grid" | "list">("grid");
 
   const filteredCategories = categories.filter(category =>
-    category.toLowerCase().includes(searchTerm.toLowerCase())
+    category.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -66,7 +66,7 @@ export default function CategoriesPage() {
                 : "space-y-6"
             }>
               {filteredCategories.map((category) => (
-                <ScrollToTopLink to={`/category/${category}`} key={category}>
+                <ScrollToTopLink to={`/category/${category.slug}`} key={category.slug}>
                   <CategoryCard category={category} layout={layout} />
                 </ScrollToTopLink>
               ))}

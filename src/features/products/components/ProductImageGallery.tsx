@@ -1,33 +1,40 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { BsZoomIn } from "react-icons/bs";
 
-export default function ProductImageGallery({ images, title }) {
+import { Product } from "@/entities/product/model/types";
+
+interface ProductImageGalleryProps {
+  images: Product['images'];
+  title: Product['title'];
+}
+
+export default function ProductImageGallery({ images, title }: ProductImageGalleryProps) {
   const [mainImage, setMainImage] = useState(images[0]);
   const [isZoomed, setIsZoomed] = useState(false);
 
   // Fallback to placeholder if no images are available
   const displayImages = images && images.length > 0 ? images : ["/placeholder.svg"];
   if (!mainImage && displayImages.length > 0) {
-      setMainImage(displayImages[0]);
+    setMainImage(displayImages[0]);
   }
 
   return (
     <div className="sticky top-24">
       <div className="relative group">
-        <div 
-            className={`relative overflow-hidden rounded-xl bg-gray-50 ${isZoomed ? 'cursor-zoom-out' : 'cursor-zoom-in'}`}
-            onClick={() => setIsZoomed(!isZoomed)}
+        <div
+          className={`relative overflow-hidden rounded-xl bg-gray-50 ${isZoomed ? 'cursor-zoom-out' : 'cursor-zoom-in'}`}
+          onClick={() => setIsZoomed(!isZoomed)}
         >
-          <img 
-            src={mainImage || "/placeholder.svg"} 
-            alt={title} 
+          <img
+            src={mainImage || "/placeholder.svg"}
+            alt={title}
             className={`w-full aspect-square object-cover transition-transform duration-500
               ${isZoomed ? 'scale-150' : 'scale-100 group-hover:scale-105'}`}
           />
           {!isZoomed && (
-              <div className="absolute top-4 right-4 p-2 bg-white/80 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-                <BsZoomIn className="w-5 h-5 text-gray-700" />
-              </div>
+            <div className="absolute top-4 right-4 p-2 bg-white/80 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+              <BsZoomIn className="w-5 h-5 text-gray-700" />
+            </div>
           )}
         </div>
 

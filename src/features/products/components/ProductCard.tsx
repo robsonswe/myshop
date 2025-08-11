@@ -1,21 +1,31 @@
-import { useState } from "react"
+import React, { useState } from "react"
 import { ShoppingCart, Heart, Star, StarHalf } from "lucide-react"
+import { Product } from "@/entities/product/model/types"
 
-const ProductCard = ({ product, onAddToCart, onToggleWishlist }) => {
+interface ProductCardProps {
+  product: Product;
+  onAddToCart: (product: Product) => void;
+  onToggleWishlist: (id: number, isWishlist: boolean) => void;
+}
+
+const ProductCard = ({ product, onAddToCart, onToggleWishlist }: ProductCardProps) => {
   const [isWishlist, setIsWishlist] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
+  // This calculation is useful, so the parent doesn't need to provide it.
   const originalPrice =
     product.discountPercentage > 0 ? Math.round(product.price / (1 - product.discountPercentage / 100)) : null
 
-  const handleWishlistClick = (e) => {
+  const handleWishlistClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    // Stop propagation to prevent any parent link from navigating
     e.stopPropagation()
     e.preventDefault()
     setIsWishlist(!isWishlist)
     onToggleWishlist?.(product.id, !isWishlist)
   }
 
-  const handleAddToCart = (e) => {
+  const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
+    // Stop propagation to prevent any parent link from navigating
     e.stopPropagation()
     e.preventDefault()
     setIsLoading(true)
@@ -25,7 +35,7 @@ const ProductCard = ({ product, onAddToCart, onToggleWishlist }) => {
     }, 500)
   }
 
-  const renderStars = (rating) => {
+  const renderStars = (rating: number) => {
     const stars = []
     const fullStars = Math.floor(rating)
     const hasHalfStar = rating % 1 >= 0.5
@@ -69,9 +79,8 @@ const ProductCard = ({ product, onAddToCart, onToggleWishlist }) => {
           className="absolute top-3 right-3 p-2.5 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-white transition-all duration-200 transform hover:scale-110"
         >
           <Heart
-            className={`w-5 h-5 transition-colors ${
-              isWishlist ? "fill-red-500 text-red-500" : "text-gray-600 hover:text-red-500"
-            }`}
+            className={`w-5 h-5 transition-colors ${isWishlist ? "fill-red-500 text-red-500" : "text-gray-600 hover:text-red-500"
+              }`}
           />
         </button>
 
@@ -115,9 +124,8 @@ const ProductCard = ({ product, onAddToCart, onToggleWishlist }) => {
             {originalPrice && <span className="text-lg text-gray-400 line-through">${originalPrice}</span>}
           </div>
           <span
-            className={`text-sm font-medium px-2 py-1 rounded-full ${
-              product.stock < 10 ? "text-red-700 bg-red-50" : "text-green-700 bg-green-50"
-            }`}
+            className={`text-sm font-medium px-2 py-1 rounded-full ${product.stock < 10 ? "text-red-700 bg-red-50" : "text-green-700 bg-green-50"
+              }`}
           >
             {product.stock < 10 ? `${product.stock} left` : "In Stock"}
           </span>
@@ -141,4 +149,4 @@ const ProductCard = ({ product, onAddToCart, onToggleWishlist }) => {
   )
 }
 
-export default ProductCard
+export default ProductCard;

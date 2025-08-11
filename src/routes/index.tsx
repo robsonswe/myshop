@@ -14,7 +14,7 @@ const routes = [
     errorElement: <ErrorPage />,
   },
   {
-    path: `/categories`, // Note: removed trailing slash for consistency
+    path: `/categories`,
     element: <CategoriesPage />,
     errorElement: <ErrorPage />,
   },
@@ -24,7 +24,7 @@ const routes = [
     errorElement: <ErrorPage />,
   },
   {
-    path: `/category/:categoryId`,
+    path: `/category/:categorySlug`,
     element: <CategoryPage />,
     errorElement: <ErrorPage />,
   },

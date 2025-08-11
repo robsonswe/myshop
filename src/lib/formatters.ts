@@ -1,4 +1,4 @@
-export function catTitle(str) {
+export function catTitle(str: string): string {
   if (!str) return "";
   return str
     .replace(/-/g, " ")
